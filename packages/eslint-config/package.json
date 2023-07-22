@@ -1,0 +1,40 @@
+{
+  "name": "@granity/eslint-config",
+  "main": "index.js",
+  "prettier": "@granity/prettier-config",
+  "scripts": {
+    "audit": "npm audit",
+    "audit:fix": "npm audit fix",
+    "update:check": "ncu",
+    "update": "ncu -u"
+  },
+  "devDependencies": {
+    "@granity/prettier-config": "*",
+    "@typescript-eslint/eslint-plugin": "^5.54.0",
+    "@typescript-eslint/parser": "^5.54.0",
+    "eslint": "^8.35.0",
+    "eslint-config-airbnb-typescript": "^17.0.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-import-resolver-typescript": "^3.5.3",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-jsx-a11y": "^6.7.1",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-simple-import-sort": "^10.0.0",
+    "npm-check-updates": "^16.7.10",
+    "prettier": "2.8.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fgarrec0397/Granity.git"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fgarrec0397/Granity/issues"
+  },
+  "homepage": "https://github.com/fgarrec0397/Granity#readme",
+  "dependencies": {
+    "jsdom": "^21.1.0"
+  }
+}
