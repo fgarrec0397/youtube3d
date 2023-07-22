@@ -1,0 +1,9 @@
+{
+  "extends": "@granity/typescript-config/base.json",
+  "include": [
+    "index.ts",
+    "drei",
+    "fiber",
+    "stdlib",
+  ]
+}

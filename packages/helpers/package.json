@@ -1,0 +1,41 @@
+{
+  "name": "@granity/helpers",
+  "version": "1.0.0",
+  "main": "./src/index.ts",
+  "scripts": {
+    "audit": "npm audit",
+    "audit:fix": "npm audit fix",
+    "lint": "eslint --ext .ts,.tsx src --fix",
+    "format": "prettier --write ./src",
+    "test": "vitest run",
+    "test:watch": "vitest watch",
+    "test:coverage": "vitest run --coverage",
+    "update:check": "ncu",
+    "update": "ncu -u"
+  },
+  "license": "ISC",
+  "prettier": "@granity/prettier-config",
+  "dependencies": {
+    "@granity/three": "*",
+    "@tanstack/react-query": "^4.24.10",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^14.0.0",
+    "@types/three": "^0.149.0",
+    "@vitejs/plugin-react": "^3.1.0",
+    "@vitest/coverage-c8": "^0.28.5",
+    "axios": "^1.3.5",
+    "jsdom": "^21.1.0",
+    "lodash": "^4.17.21",
+    "react": "^18.2.0",
+    "react-error-boundary": "^4.0.4",
+    "vitest": "^0.28.5"
+  },
+  "devDependencies": {
+    "@granity/eslint-config": "*",
+    "@granity/prettier-config": "*",
+    "@granity/typescript-config": "*",
+    "@types/lodash": "^4.14.191",
+    "npm-check-updates": "^16.7.10"
+  },
+  "sideEffects": false
+}

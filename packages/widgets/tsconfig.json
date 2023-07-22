@@ -1,0 +1,14 @@
+{
+  "extends": "@granity/typescript-config/base.json",
+  "include": [
+    "./src",
+    "vitest.config.ts",
+  ],
+  "compilerOptions": {
+    "baseUrl": "./src",
+    "paths": {
+        "@widgets/*": ["./*"],
+    },
+  },
+  "references": [{ "path": "./tsconfig.vite.json" }]
+}

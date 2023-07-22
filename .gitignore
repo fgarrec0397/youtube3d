@@ -1,0 +1,7 @@
+# global
+node_modules
+coverage
+.turbo
+
+
+*.env
