@@ -1,4 +1,10 @@
-import { createGameWidget, GameEditableWidget, GameOptionsFieldTypes } from "@granity/engine";
+import {
+    createGameWidget,
+    GameEditableWidget,
+    GameOptionsFieldTypes,
+    GameRigidBody,
+} from "@granity/engine";
+import { CuboidCollider } from "@granity/physics";
 import { FC } from "react";
 
 export type TerrainProps = GameEditableWidget & {
@@ -10,10 +16,13 @@ type OwnProps = TerrainProps;
 
 const Terrain: FC<OwnProps> = ({ color }) => {
     return (
-        <mesh>
-            <planeBufferGeometry />
-            <meshStandardMaterial color={color} />
-        </mesh>
+        <GameRigidBody type="fixed" colliders={false}>
+            <mesh>
+                <planeBufferGeometry />
+                <meshStandardMaterial color={color} />
+            </mesh>
+            <CuboidCollider args={[1000, 2, 1000]} position={[0, -2, 0]} />
+        </GameRigidBody>
     );
 };
 

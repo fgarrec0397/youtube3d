@@ -22,11 +22,10 @@ const nextConfig = {
         ],
     },
     async rewrites() {
-        console.log(process.env.SERVER_PORT, "process.env.SERVER_PORT");
         return [
             {
                 source: "/server/:path*",
-                destination: `http://localhost:5001/:path*`,
+                destination: `http://localhost:${process.env.SERVER_PORT || 5001}/:path*`,
             },
         ];
     },

@@ -3,9 +3,9 @@ import { GameWidgetModule, UIWidgetModule } from "@granity/engine";
 import type { CamerasProps } from "./Cameras";
 import type { GeometryFormsProps } from "./GeometryForms";
 import { LightProps } from "./Light";
+import type { PlayerProps } from "./Player";
 import type { TerrainProps } from "./Terrain";
 import type { WidgetStarterProps, WidgetStarterState } from "./WidgetStarter";
-import { WidgetStarter2State } from "./WidgetStarter2";
 
 // const modules = import.meta.glob("./*/*.tsx", { eager: true });
 
@@ -17,7 +17,6 @@ declare module "@granity/engine" {
     interface State {
         features?: {
             widgetStarter: WidgetStarterState;
-            widgetStarter2: WidgetStarter2State;
         };
     }
 
