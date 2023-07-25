@@ -11,9 +11,11 @@ const GamePhysics: FC<Props> = ({ children, ...props }) => {
 
     if (physicsEnabled) {
         return (
-            <Physics {...props} debug={isDebugEnabled}>
-                {children}
-            </Physics>
+            <>
+                <Physics {...props} debug={isDebugEnabled}>
+                    {children}
+                </Physics>
+            </>
         );
     }
 

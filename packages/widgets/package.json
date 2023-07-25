@@ -10,17 +10,20 @@
   },
   "dependencies": {
     "@granity/engine": "*",
-    "@granity/helpers": "*",
     "@granity/eslint-config": "*",
-    "@granity/ui": "*",
+    "@granity/helpers": "*",
     "@granity/physics": "*",
     "@granity/prettier-config": "*",
     "@granity/three": "*",
     "@granity/typescript-config": "*",
+    "@granity/ui": "*",
     "@reduxjs/toolkit": "^1.9.3",
     "@types/react": "^18.0.28",
     "@types/three": "^0.149.0",
-    "react-redux": "^8.0.5"
+    "i": "^0.3.7",
+    "npm": "^9.8.1",
+    "react-redux": "^8.0.5",
+    "three-stdlib": "^2.23.13"
   },
   "devDependencies": {
     "@types/react-dom": "^18.0.11",

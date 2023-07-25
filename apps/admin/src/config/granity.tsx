@@ -9,7 +9,6 @@ const importWidgetsModules = (requireContext: any) => {
     const modules = {};
     requireContext.keys().forEach((key: string) => ((modules as any)[key] = requireContext(key)));
     widgetsModules = Object.keys(modules).map((x) => (modules as any)[x].widget);
-    console.log(widgetsModules, "widgetsModules");
 };
 
 importWidgetsModules(

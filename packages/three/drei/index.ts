@@ -1,6 +1,8 @@
 export { Grid } from "@react-three/drei/core/Grid";
 export { OrbitControls } from "@react-three/drei/core/OrbitControls";
 export { PerspectiveCamera } from "@react-three/drei/core/PerspectiveCamera";
+// export { PointerLockControls } from "@react-three/drei/core/PointerLockControls";
+export { PointerLockControls } from "./PointerLockControls";
 export { Sky } from "@react-three/drei/core/Sky";
 export { useContextBridge } from "@react-three/drei/core/useContextBridge";
 export { useGLTF } from "@react-three/drei/core/useGLTF";
