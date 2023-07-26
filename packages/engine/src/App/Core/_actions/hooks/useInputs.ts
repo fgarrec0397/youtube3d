@@ -13,7 +13,7 @@ import useConfig from "./useConfig";
 const triggerAllMappedKeys = <EventType extends Event>(
     keyMapped: TriggerableInputsApp,
     keyboardType: InputsType,
-    event: EventType
+    event?: EventType
 ) => {
     const clientKeyMapped: AppsClientInput = {};
 
@@ -36,6 +36,7 @@ const useInputs = <HandlerType extends InputsMappingHandler>(
     const handlerCallback = useCallback(handler, [handler, ...dependencies]);
     const [keyboardType, setKeyboardType] = useState<InputsType>("editor");
     const [availableEvents, setAvailableEvents] = useState<(keyof WindowEventMap)[]>([]);
+    const [clientInput, setClientInput] = useState<AppsClientInput>();
     const { isEditor } = useEditor();
     const { inputsConfig } = useConfig();
 
@@ -61,6 +62,10 @@ const useInputs = <HandlerType extends InputsMappingHandler>(
                     const hasCtrlKey = x.ctrlKey ? event.ctrlKey : !event.ctrlKey;
                     const hasShifKey = x.shiftKey ? event.shiftKey : !event.shiftKey;
 
+                    if (event.type !== x.event) {
+                        return false;
+                    }
+
                     if ("code" in event && "code" in x) {
                         return hasCtrlKey && hasShifKey && event.code === x.code;
                     }
@@ -84,7 +89,9 @@ const useInputs = <HandlerType extends InputsMappingHandler>(
 
     useEffect(() => {
         const eventHandler = <EventType extends Event>(event: EventType) => {
-            handlerCallback(triggerAllMappedKeys(keysMapping, keyboardType, event));
+            const inputs = triggerAllMappedKeys(keysMapping, keyboardType, event);
+            handlerCallback(inputs);
+            setClientInput(inputs);
         };
 
         availableEvents.forEach((x) => {
@@ -97,6 +104,8 @@ const useInputs = <HandlerType extends InputsMappingHandler>(
             });
         };
     }, [availableEvents, handlerCallback, keyboardType, keysMapping]);
+
+    return clientInput;
 };
 
 export default useInputs;
