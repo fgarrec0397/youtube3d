@@ -160,6 +160,7 @@ export default {
             ctrlKey: false,
             shiftKey: false,
             preventDefault: false,
+            isFire: true, // TODO - check to do something with this
         },
     ],
 } as InputsConfig;

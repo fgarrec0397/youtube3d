@@ -62,6 +62,7 @@ export type BaseInputItem<EventType extends keyof WindowEventMap> = {
     ctrlKey: boolean;
     shiftKey: boolean;
     preventDefault: boolean;
+    isFire?: boolean;
 };
 
 /**
