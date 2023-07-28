@@ -11,8 +11,7 @@ import {
 import { RAPIER, RigidBodyRefType, usePhysics } from "@granity/physics";
 import { PerspectiveCamera, Vector3 } from "@granity/three";
 import { PointerLockControls } from "@granity/three/drei";
-import { useFrame } from "@granity/three/fiber";
-import { FC, Ref, useEffect, useRef, useState } from "react";
+import { FC, Ref, useRef, useState } from "react";
 
 export type PlayerProps = GameEditableWidget;
 
@@ -76,14 +75,10 @@ const Player: FC<PlayerProps> = ({ position }, ref) => {
 
         if (input.jump) {
             setIsJumpPressed(true);
+        } else {
+            setIsJumpPressed(false);
         }
     }, []);
-
-    // useEffect(() => {
-    //     if (isJumpPressed) {
-    //         setIsJumpPressed(false);
-    //     }
-    // }, [isJumpPressed]);
 
     useGameUpdate(() => {
         if (isEditor) {
@@ -110,12 +105,14 @@ const Player: FC<PlayerProps> = ({ position }, ref) => {
         // // jumping
         const world = physics.world.raw();
         const ray = world.castRay(
-            new RAPIER.Ray(rigidbodyRef.current.translation(), { x: 0, y: -1, z: 0 })
+            new RAPIER.Ray(rigidbodyRef.current.translation(), { x: 0, y: -1, z: 0 }),
+            undefined as unknown as number, // setting a number does not work or allows infinite jump
+            true
         );
-        const grounded = ray && ray.collider && Math.abs(ray.toi) <= 1.75;
-        console.log(isJumpPressed, "isJumpPressed");
 
-        if (isJumpPressed && grounded) rigidbodyRef.current.setLinvel({ x: 0, y: 7.5, z: 0 }, true);
+        const grounded = ray && ray.collider && Math.abs(ray.toi) <= 1.75;
+
+        if (isJumpPressed && grounded) rigidbodyRef.current.setLinvel({ x: 0, y: 5, z: 0 }, true);
     });
 
     return (
@@ -139,9 +136,6 @@ const Player: FC<PlayerProps> = ({ position }, ref) => {
                 </mesh>
             </GameRigidBody>
         </>
-        // {/* <group ref={axe} onPointerMissed={(e) => (axe.current.children[0].rotation.x = -0.5)}>
-        //     <Axe position={[0.3, -0.35, 0.5]} />
-        // </group> */}
     );
 };
 
