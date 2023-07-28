@@ -1,4 +1,4 @@
-import useWidgetStarterService from "../_data/hooks/useWidgetStarterService";
+import useWidgetStarterService from "../_data/hooks/useCinemaService";
 
 export default () => {
     const { add, widgetStarterMessage } = useWidgetStarterService();

@@ -1,6 +1,6 @@
 import { useAppDispatch } from "@granity/engine";
 
-import { addYourWidgetAction } from "../state/widgetStarterReducer";
+import { addYourWidgetAction } from "../state/cinemaReducer";
 
 export default () => {
     const dispatch = useAppDispatch();
