@@ -111,7 +111,6 @@ const Player: FC<PlayerProps> = ({ position }, ref) => {
         );
 
         const grounded = ray && ray.collider && Math.abs(ray.toi) <= 1.75;
-        console.log(isJumpPressed, "isJumpPressed");
 
         if (isJumpPressed && grounded) rigidbodyRef.current.setLinvel({ x: 10, y: 5, z: 0 }, true);
     });
