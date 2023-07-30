@@ -119,8 +119,7 @@ const Player: FC<PlayerProps> = ({ position }, ref) => {
         <>
             <GameRigidBody
                 ref={rigidbodyRef}
-                colliders="trimesh"
-                mass={1}
+                colliders="cuboid"
                 type="dynamic"
                 key={position.toString()}
                 enabledRotations={[false, false, false]}
