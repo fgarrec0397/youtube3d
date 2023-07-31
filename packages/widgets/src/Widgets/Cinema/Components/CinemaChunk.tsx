@@ -1,14 +1,18 @@
-import { GameRigidBody, useGameInit } from "@granity/engine";
+import { GameRigidBody } from "@granity/engine";
 import { Vector3Array } from "@granity/helpers";
-import { MeshCollider } from "@granity/physics";
+import { CuboidCollider, MeshCollider } from "@granity/physics";
 import { Box3, Mesh, Vector3 } from "@granity/three";
 import { useGLTF } from "@granity/three/drei";
 import { FC, useEffect, useMemo, useRef, useState } from "react";
 import { GLTF } from "three-stdlib";
 
+import extractVideoIdFromUrl from "../_actions/utilities/extractYoutubeVideoIdFromUrl";
+import YoutubeVideoPlayer from "./YoutubeVideoPlayer";
+
 export type CinemaChunkProps = {
     cinemaModel3D: string;
     index: number;
+    videoUrl: string;
     position?: Vector3Array;
 };
 
@@ -40,14 +44,21 @@ type GLTFResult = GLTF & {
     };
 };
 
-const CinemaChunk: FC<CinemaChunkProps> = ({ cinemaModel3D, index }) => {
+const CinemaChunk: FC<CinemaChunkProps> = ({ cinemaModel3D, index, videoUrl }) => {
     const { nodes, materials } = useGLTF(cinemaModel3D) as GLTFResult;
     const ref = useRef<Mesh>(null);
     const [size, setSize] = useState<Vector3>(new Vector3());
+    const [videoId, setVideoId] = useState<string | undefined>();
+    const [showYoutubeVideo, setShowYoutubeVideo] = useState(false);
 
     const isOdd = useMemo(() => {
         return index % 2 !== 0;
     }, [index]);
+
+    useEffect(() => {
+        const youtubeVideoId = extractVideoIdFromUrl(videoUrl);
+        setVideoId(youtubeVideoId);
+    }, [videoId, videoUrl]);
 
     useEffect(() => {
         if (!ref.current) {
@@ -104,31 +115,53 @@ const CinemaChunk: FC<CinemaChunkProps> = ({ cinemaModel3D, index }) => {
                         scale={[9.368, 16.641, 0.03]}
                     />
                 </MeshCollider>
+
                 <MeshCollider type="cuboid">
                     <mesh
-                        geometry={nodes.Cube006.geometry}
-                        material={materials["Material.009"]}
+                        // geometry={nodes.Cube006.geometry}
+                        // material={materials["Material.009"]}
                         position={[51.298, 9.36, 0]}
-                        rotation={[-Math.PI / 2, Math.PI / 2, 0]}
-                        scale={[9.368, 16.641, 0.03]}
-                    />
+                        rotation={[0, -Math.PI / 2, 0]}
+                        scale={[22, 20, 0.03]}
+                    >
+                        <YoutubeVideoPlayer
+                            videoId={videoId}
+                            position={[0, 0, 1.5]}
+                            canVideoPlay={showYoutubeVideo}
+                        />
+                    </mesh>
                 </MeshCollider>
-                <MeshCollider type="cuboid">
+                <CuboidCollider
+                    args={[24.003, 16.641, 0.03]}
+                    position={[27.722, -0.0001, 0]}
+                    rotation={[-Math.PI / 2, 0, 0]}
+                    name="room-floor"
+                    onCollisionEnter={({ other }) => {
+                        if (other.rigidBodyObject?.name === "player") {
+                            setShowYoutubeVideo(true);
+                        }
+                    }}
+                    onCollisionExit={({ other }) => {
+                        if (other.rigidBodyObject?.name === "player") {
+                            setShowYoutubeVideo(false);
+                        }
+                    }}
+                >
                     <mesh
                         geometry={nodes.Cube007.geometry}
                         material={materials["Material.010"]}
-                        position={[27.722, -0.0001, 0]}
-                        rotation={[-Math.PI / 2, 0, 0]}
+                        // position={[27.722, -0.0001, 0]}
+                        // rotation={[-Math.PI / 2, 0, 0]}
                         scale={[24.003, 16.641, 0.03]}
                     />
-                </MeshCollider>
-                <mesh
+                </CuboidCollider>
+                {/* <mesh
                     geometry={nodes.Plane.geometry}
                     material={nodes.Plane.material}
                     position={[23.315, 6.912, 16.7]}
                     rotation={[Math.PI / 2, 0, -Math.PI]}
                     scale={[-19.646, -1, -6.876]}
-                />
+                /> */}
                 {/* <MeshCollider type="cuboid"> */}
                 <mesh
                     geometry={nodes.Cube008.geometry}

@@ -8,12 +8,18 @@ export type CinemaProps = GameEditableWidget & {
 };
 
 const Cinema: FC<CinemaProps> = ({ model3D }) => {
-    const myTestArray = [1, 2, 3];
+    const myTestArray = [
+        "https://www.youtube.com/watch?v=fuhE6PYnRMc&t=8s&ab_channel=MrBeast",
+        "https://www.youtube.com/watch?v=48h57PspBec&t=2s&ab_channel=MrBeast",
+        "https://www.youtube.com/watch?v=1WEAJ-DFkHE&ab_channel=MrBeast",
+        "https://www.youtube.com/watch?v=UE5AHE2Ypr8&ab_channel=MrBeast",
+        "https://www.youtube.com/watch?v=DuQbOQwVaNE&ab_channel=MrBeast",
+    ];
 
     return (
         <>
-            {myTestArray.map((x) => (
-                <CinemaChunk key={x} index={x} cinemaModel3D={model3D} />
+            {myTestArray.map((x, index) => (
+                <CinemaChunk key={x} videoUrl={x} index={index} cinemaModel3D={model3D} />
             ))}
         </>
     );

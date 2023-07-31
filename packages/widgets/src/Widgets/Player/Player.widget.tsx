@@ -121,6 +121,7 @@ const Player: FC<PlayerProps> = ({ position }, ref) => {
                 ref={rigidbodyRef}
                 colliders="cuboid"
                 type="dynamic"
+                name="player"
                 key={position.toString()}
                 enabledRotations={[false, false, false]}
             >
