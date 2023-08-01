@@ -1,4 +1,5 @@
 import { createGameWidget, GameEditableWidget, GameOptionsFieldTypes } from "@granity/engine";
+import { BakeShadows } from "@granity/three/drei";
 import { FC } from "react";
 
 import CinemaChunk from "./Components/CinemaChunk";
@@ -18,6 +19,8 @@ const Cinema: FC<CinemaProps> = ({ model3D }) => {
 
     return (
         <>
+            <fog attach="fog" args={["#d0d0d0", 8, 35]} />
+            {/* <BakeShadows /> */}
             {myTestArray.map((x, index) => (
                 <CinemaChunk key={x} videoUrl={x} index={index} cinemaModel3D={model3D} />
             ))}

@@ -1,3 +1,4 @@
+import { PCFSoftShadowMap } from "@granity/three";
 import { Props as CanvasProps } from "@granity/three/fiber";
 
 /**
@@ -5,6 +6,9 @@ import { Props as CanvasProps } from "@granity/three/fiber";
  */
 const canvasProps: Omit<CanvasProps, "children"> = {
     camera: { fov: 25, aspect: 1 },
+    // shadows: {
+    //     type: PCFSoftShadowMap,
+    // },
 };
 
 export default canvasProps;

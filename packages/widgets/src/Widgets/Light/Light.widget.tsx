@@ -43,16 +43,26 @@ const Light: FC<LightProps> = ({ lightType, intensity, direction }, ref) => {
         );
     }
 
+    if (lightType === "ambientLight") {
+        return <ambientLight ref={ref} intensity={intensity} color="#d3d3d3" castShadow />;
+    }
+
+    if (lightType === "rectAreaLight") {
+        return <rectAreaLight intensity={intensity} />;
+    }
+
     return (
-        <spotLight
-            ref={ref}
-            position={[0, 0, 0]}
-            intensity={intensity}
-            shadow-mapSize-width={64}
-            shadow-mapSize-height={64}
-            castShadow
-            shadow-bias={-0.001}
-        />
+        <>
+            <spotLight
+                ref={ref}
+                position={[0, 0, 0]}
+                intensity={intensity}
+                shadow-mapSize-width={64}
+                shadow-mapSize-height={64}
+                castShadow
+                shadow-bias={-0.001}
+            />
+        </>
     );
 };
 
@@ -87,6 +97,10 @@ export const widget = createGameWidget<LightProps>({
                 {
                     value: "directionalLight",
                     name: "Directional",
+                },
+                {
+                    value: "rectAreaLight",
+                    name: "React Area Light",
                 },
                 {
                     value: "spotLight",
