@@ -44,7 +44,7 @@ const Light: FC<LightProps> = ({ lightType, intensity, direction }, ref) => {
     }
 
     if (lightType === "ambientLight") {
-        return <ambientLight ref={ref} intensity={intensity} color="#d3d3d3" castShadow />;
+        return <ambientLight ref={ref} intensity={intensity} color="#ffffff" castShadow />;
     }
 
     if (lightType === "rectAreaLight") {

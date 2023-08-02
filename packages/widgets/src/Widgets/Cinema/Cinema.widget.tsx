@@ -19,7 +19,7 @@ const Cinema: FC<CinemaProps> = ({ model3D }) => {
 
     return (
         <>
-            <fog attach="fog" args={["#d0d0d0", 8, 35]} />
+            <fog attach="fog" color="#ffffff" near={1} far={2} />
             {/* <BakeShadows /> */}
             {myTestArray.map((x, index) => (
                 <CinemaChunk key={x} videoUrl={x} index={index} cinemaModel3D={model3D} />

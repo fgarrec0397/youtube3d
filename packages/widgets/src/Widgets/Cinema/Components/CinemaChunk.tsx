@@ -9,6 +9,7 @@ import { DirectionalLight, DirectionalLightHelper, Object3D, RectAreaLight } fro
 import { GLTF, RectAreaLightHelper } from "three-stdlib";
 
 import extractVideoIdFromUrl from "../_actions/utilities/extractYoutubeVideoIdFromUrl";
+import MeshesMaterial from "./MeshesMaterial";
 import YoutubeVideoPlayer from "./YoutubeVideoPlayer";
 
 export type CinemaChunkProps = {
@@ -56,8 +57,8 @@ const CinemaChunk: FC<CinemaChunkProps> = ({ cinemaModel3D, index, videoUrl }) =
     const [videoId, setVideoId] = useState<string | undefined>();
     const [showYoutubeVideo, setShowYoutubeVideo] = useState(false);
 
-    // useHelper(lightRef as unknown as MutableRefObject<Object3D<Event>>, RectAreaLightHelper);
-    useHelper(lightRef as unknown as MutableRefObject<Object3D<Event>>, DirectionalLightHelper);
+    useHelper(lightRef as unknown as MutableRefObject<Object3D<Event>>, RectAreaLightHelper);
+    // useHelper(lightRef2 as unknown as MutableRefObject<Object3D<Event>>, DirectionalLightHelper);
 
     const isOdd = useMemo(() => {
         return index % 2 !== 0;
@@ -80,270 +81,104 @@ const CinemaChunk: FC<CinemaChunkProps> = ({ cinemaModel3D, index, videoUrl }) =
     }, []);
 
     return (
-        <Suspense>
-            <GameRigidBody
-                type="fixed"
-                colliders={false}
-                position={[0, 0, index * size.z]}
-                rotation={[0, isOdd ? 0 : Math.PI, 0]}
-            >
+        <GameRigidBody
+            type="fixed"
+            colliders={false}
+            position={[0, 0, index * size.z]}
+            rotation={[0, isOdd ? 0 : Math.PI, 0]}
+        >
+            <Suspense>
                 <group dispose={null}>
-                    <MeshCollider type="cuboid">
-                        <mesh
-                            ref={floorRef}
-                            geometry={nodes.Cube002.geometry}
-                            // material={materials["Material.004"]}
-                            rotation={[-Math.PI / 2, 0, 0]}
-                            scale={[3.721, 16.641, 0.03]}
-                            receiveShadow
-                            castShadow
-                        >
-                            <MeshReflectorMaterial
-                                mirror={1}
-                                roughness={1}
-                                depthScale={1.2}
-                                minDepthThreshold={0.4}
-                                maxDepthThreshold={1.4}
-                                color="#ffffff"
-                                metalness={0.8}
-                            />
-                        </mesh>
-                    </MeshCollider>
-                    <MeshCollider type="cuboid">
-                        <mesh
-                            ref={ref}
-                            geometry={nodes.Cube001.geometry}
-                            // material={materials["Material.004"]}
-                            position={[-3.704, 3.708, 0]}
-                            rotation={[-Math.PI / 2, Math.PI / 2, 0]}
-                            scale={[3.721, 16.641, 0.03]}
-                            receiveShadow
-                            castShadow
-                        >
-                            <MeshReflectorMaterial
-                                mirror={1}
-                                roughness={1}
-                                depthScale={1.2}
-                                minDepthThreshold={0.4}
-                                maxDepthThreshold={1.4}
-                                color="#ffffff"
-                                metalness={0.8}
-                            />
-                        </mesh>
-                    </MeshCollider>
-                    <mesh
-                        geometry={nodes.Cube004.geometry}
-                        // material={materials["Material.004"]}
-                        position={[0, 7.377, 0]}
-                        rotation={[-Math.PI / 2, 0, 0]}
-                        scale={[3.721, 16.641, 0.03]}
-                        // receiveShadow
-                        // castShadow
-                    >
-                        <MeshReflectorMaterial
-                            blur={[300, 50]}
-                            resolution={1024}
-                            mixBlur={1}
-                            mixStrength={100}
-                            mirror={0}
-                            roughness={1}
-                            depthScale={1.2}
-                            minDepthThreshold={0.4}
-                            maxDepthThreshold={1.4}
-                            color="#ffffff"
-                            metalness={0.8}
-                        />
-                    </mesh>
-                    {/* <rectAreaLight
-                        ref={lightRef}
-                        width={5}
-                        height={15}
-                        intensity={10}
-                        position={[0, 7.3, 0]}
-                        rotation={[-Math.PI / 2, 0, 0]}
-                        castShadow
-                    /> */}
-                    <directionalLight
+                    {/* <directionalLight
                         ref={lightRef2}
-                        intensity={0.1}
+                        intensity={1}
                         position={[0, 7.3, 0]}
                         rotation={[-Math.PI / 2, 0, 0]}
-                        target-position={[0, 0, 0]}
+                        target-position={[index, -100, 0]}
                         // target={floorRef.current}
                         shadow-mapSize-width={1024}
                         shadow-mapSize-height={1024}
                         castShadow
+                    /> */}
+                    <rectAreaLight
+                        ref={lightRef}
+                        width={5}
+                        height={15}
+                        intensity={5}
+                        position={[0, 7.3, 0]}
+                        rotation={[-Math.PI / 2, 0, 0]}
                     />
-                    <MeshCollider type="trimesh">
-                        <mesh
-                            geometry={nodes.Cube005.geometry}
-                            // material={materials["Material.004"]}
-                            position={[3.709, 9.36, 0]}
-                            rotation={[-Math.PI / 2, Math.PI / 2, 0]}
-                            scale={[9.368, 16.641, 0.03]}
-                            // receiveShadow
-                            // castShadow
-                        >
-                            <MeshReflectorMaterial
-                                mirror={1}
-                                roughness={1}
-                                depthScale={1.2}
-                                minDepthThreshold={0.4}
-                                maxDepthThreshold={1.4}
-                                color="#ffffff"
-                                metalness={0.8}
-                            />
-                        </mesh>
-                    </MeshCollider>
-
                     <MeshCollider type="cuboid">
                         <mesh
-                            // geometry={nodes.Cube006.geometry}
-                            // material={materials["Material.004"]}
-                            position={[51.298, 9.36, 0]}
-                            rotation={[0, -Math.PI / 2, 0]}
-                            scale={[22, 20, 0.03]}
-                            receiveShadow
-                            castShadow
-                        >
-                            <YoutubeVideoPlayer
-                                videoId={videoId}
-                                position={[0, 0, 1.5]}
-                                canVideoPlay={showYoutubeVideo}
-                            />
-
-                            <MeshReflectorMaterial
-                                mirror={1}
-                                roughness={1}
-                                depthScale={1.2}
-                                minDepthThreshold={0.4}
-                                maxDepthThreshold={1.4}
-                                color="#ffffff"
-                                metalness={0.8}
-                            />
-                        </mesh>
+                            ref={ref}
+                            geometry={nodes.Cube002.geometry}
+                            material={materials.Marble}
+                            rotation={[Math.PI / 2, 0, 0]}
+                        />
                     </MeshCollider>
-                    <CuboidCollider
-                        args={[24.003, 16.641, 0.03]}
-                        position={[27.722, -0.0001, 0]}
+                    <mesh
+                        geometry={nodes.Cube001.geometry}
+                        material={materials.Marble}
+                        position={[-3.704, 3.708, 0]}
+                        rotation={[Math.PI / 2, -Math.PI / 2, 0]}
+                    />
+                    <mesh
+                        geometry={nodes.Cube004.geometry}
+                        material={materials.Plain}
+                        position={[0, 7.377, 0]}
+                        rotation={[Math.PI / 2, 0, 0]}
+                    />
+                    <mesh
+                        geometry={nodes.Cube005.geometry}
+                        material={materials.Marble}
+                        position={[3.709, 9.36, 0]}
+                        rotation={[Math.PI / 2, -Math.PI / 2, 0]}
+                    />
+                    <mesh
+                        geometry={nodes.Cube006.geometry}
+                        material={materials["Material.009"]}
+                        position={[51.298, 9.36, 0]}
+                        rotation={[-Math.PI / 2, Math.PI / 2, 0]}
+                        scale={[9.368, 16.641, 0.03]}
+                    />
+                    <mesh
+                        geometry={nodes.Cube007.geometry}
+                        material={materials["Material.010"]}
+                        position={[27.722, 0.009, 0]}
                         rotation={[-Math.PI / 2, 0, 0]}
-                        name="room-floor"
-                        onCollisionEnter={({ other }) => {
-                            if (other.rigidBodyObject?.name === "player") {
-                                setShowYoutubeVideo(true);
-                            }
-                        }}
-                        onCollisionExit={({ other }) => {
-                            if (other.rigidBodyObject?.name === "player") {
-                                setShowYoutubeVideo(false);
-                            }
-                        }}
-                    >
-                        <mesh
-                            geometry={nodes.Cube007.geometry}
-                            material={materials["Material.004"]}
-                            // position={[27.722, -0.0001, 0]}
-                            // rotation={[-Math.PI / 2, 0, 0]}
-                            scale={[24.003, 16.641, 0.03]}
-                            receiveShadow
-                            castShadow
-                        >
-                            <MeshReflectorMaterial
-                                mirror={1}
-                                roughness={1}
-                                depthScale={1.2}
-                                minDepthThreshold={0.4}
-                                maxDepthThreshold={1.4}
-                                color="#ffffff"
-                                metalness={0.8}
-                            />
-                        </mesh>
-                    </CuboidCollider>
-                    {/* <mesh
-                    geometry={nodes.Plane.geometry}
-                    material={nodes.Plane.material}
-                    position={[23.315, 6.912, 16.7]}
-                    rotation={[Math.PI / 2, 0, -Math.PI]}
-                    scale={[-19.646, -1, -6.876]}
-                /> */}
-                    {/* <MeshCollider type="cuboid"> */}
+                        scale={[24.003, 16.641, 0.03]}
+                    />
+                    <mesh
+                        geometry={nodes.Plane.geometry}
+                        material={nodes.Plane.material}
+                        position={[23.543, 6.912, 16.7]}
+                        rotation={[Math.PI / 2, 0, -Math.PI]}
+                        scale={[-19.646, -1, -6.876]}
+                    />
                     <mesh
                         geometry={nodes.Cube008.geometry}
-                        material={materials["Material.004"]}
+                        material={materials["Material.011"]}
                         position={[27.69, 9.187, -16.527]}
                         rotation={[Math.PI, 0, Math.PI / 2]}
                         scale={[9.368, 23.816, 0.03]}
-                        // receiveShadow
-                        // castShadow
-                    >
-                        <MeshReflectorMaterial
-                            blur={[300, 50]}
-                            resolution={1024}
-                            mixBlur={1}
-                            mixStrength={100}
-                            mirror={0}
-                            roughness={1}
-                            depthScale={1.2}
-                            minDepthThreshold={0.4}
-                            maxDepthThreshold={1.4}
-                            color="#ffffff"
-                            metalness={0.8}
-                        />
-                    </mesh>
-                    {/* </MeshCollider> */}
-                    {/* <MeshCollider type="cuboid"> */}
+                    />
                     <mesh
                         geometry={nodes.Cube009.geometry}
-                        material={materials["Material.004"]}
+                        material={materials["Material.012"]}
                         position={[27.557, 9.403, 16.619]}
                         rotation={[Math.PI, 0, Math.PI / 2]}
                         scale={[9.368, 23.816, 0.03]}
-                        // receiveShadow
-                        // castShadow
-                    >
-                        <MeshReflectorMaterial
-                            blur={[300, 50]}
-                            resolution={1024}
-                            mixBlur={1}
-                            mixStrength={100}
-                            mirror={0}
-                            roughness={1}
-                            depthScale={1.2}
-                            minDepthThreshold={0.4}
-                            maxDepthThreshold={1.4}
-                            color="#ffffff"
-                            metalness={0.8}
-                        />
-                    </mesh>
-                    {/* </MeshCollider> */}
-                    {/* <MeshCollider type="cuboid"> */}
+                    />
                     <mesh
                         geometry={nodes.Cube010.geometry}
-                        material={materials["Material.004"]}
+                        material={materials["Material.013"]}
                         position={[27.722, 18.701, -0.116]}
                         rotation={[-Math.PI / 2, 0, 0]}
                         scale={[24.003, 16.641, 0.03]}
-                        // receiveShadow
-                        // castShadow
-                    >
-                        <MeshReflectorMaterial
-                            blur={[300, 50]}
-                            resolution={1024}
-                            mixBlur={1}
-                            mixStrength={100}
-                            mirror={0}
-                            roughness={1}
-                            depthScale={1.2}
-                            minDepthThreshold={0.4}
-                            maxDepthThreshold={1.4}
-                            color="#ffffff"
-                            metalness={0.8}
-                        />
-                    </mesh>
-                    {/* </MeshCollider> */}
+                    />
                 </group>
-            </GameRigidBody>
-        </Suspense>
+            </Suspense>
+        </GameRigidBody>
     );
 };
 
