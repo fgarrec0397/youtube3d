@@ -34,12 +34,15 @@ const Light: FC<LightProps> = ({ lightType, intensity, direction }, ref) => {
                 ref={ref}
                 position={[0, 0, 0]}
                 intensity={intensity}
-                shadow-mapSize-width={64}
-                shadow-mapSize-height={64}
+                shadow-mapSize-width={1024}
+                shadow-mapSize-height={1024}
                 castShadow
+                receiveShadow
                 shadow-bias={-0.001}
                 target-position={direction || [0, 0, 0]}
-            />
+            >
+                <orthographicCamera attach="shadow-camera" args={[-10, 10, 10, -10]} />
+            </directionalLight>
         );
     }
 
