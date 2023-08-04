@@ -125,12 +125,9 @@ const Player: FC<PlayerProps> = ({ position }, ref) => {
                 key={position.toString()}
                 enabledRotations={[false, false, false]}
             >
-                <perspectiveCamera
-                    ref={cameraRef as Ref<PerspectiveCamera>}
-                    position={[0, 0.7, 0]}
-                />
+                <perspectiveCamera ref={cameraRef as Ref<PerspectiveCamera>} position={[0, 5, 0]} />
                 <PointerLockControls enabled={isGame || isGamePreview} camera={camera} />
-                <mesh scale={[0.5, 0.75, 0.5]}>
+                <mesh scale={[0.5, 1.5, 0.5]}>
                     <capsuleGeometry />
                     <meshStandardMaterial color="white" />
                 </mesh>

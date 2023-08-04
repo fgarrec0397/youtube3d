@@ -18,14 +18,6 @@ import extractVideoIdFromUrl from "../_actions/utilities/extractYoutubeVideoIdFr
 import MeshesMaterial from "./MeshesMaterial";
 import YoutubeVideoPlayer from "./YoutubeVideoPlayer";
 
-extend({ UnrealBloomPass });
-
-declare module "@granity/three/fiber" {
-    interface ThreeElements {
-        unrealBloomPass: Object3DNode<UnrealBloomPass, typeof UnrealBloomPass>;
-    }
-}
-
 export type CinemaChunkProps = {
     cinemaModel3D: string;
     index: number;
@@ -35,6 +27,11 @@ export type CinemaChunkProps = {
 
 type GLTFResult = GLTF & {
     nodes: {
+        Cube012: THREE.Mesh;
+        Cube011: THREE.Mesh;
+        Cube013: THREE.Mesh;
+        collision_enter: THREE.Mesh;
+        Cube: THREE.Mesh;
         Cube002: THREE.Mesh;
         Cube001: THREE.Mesh;
         Cube004: THREE.Mesh;
@@ -50,6 +47,9 @@ type GLTFResult = GLTF & {
         Neon001: THREE.Mesh;
     };
     materials: {
+        ["Marble.004"]: THREE.MeshStandardMaterial;
+        ["black concrete"]: THREE.MeshStandardMaterial;
+        ["black concrete.002"]: THREE.MeshStandardMaterial;
         Plain: THREE.MeshStandardMaterial;
         Marble: THREE.MeshStandardMaterial;
         ["Plain black"]: THREE.MeshStandardMaterial;
@@ -102,9 +102,6 @@ const CinemaChunk: FC<CinemaChunkProps> = ({ cinemaModel3D, index, videoUrl }) =
         >
             <Suspense>
                 <group dispose={null}>
-                    <Effects disableGamma>
-                        <unrealBloomPass threshold={1} strength={1.0} radius={0.5} />
-                    </Effects>
                     <rectAreaLight
                         ref={lightRef}
                         width={5}
@@ -117,33 +114,87 @@ const CinemaChunk: FC<CinemaChunkProps> = ({ cinemaModel3D, index, videoUrl }) =
                     />
                     <MeshCollider type="cuboid">
                         <mesh
-                            geometry={nodes.Cube002.geometry}
-                            material={materials.Plain}
-                            position={[-0.304, 0, 0]}
-                            rotation={[Math.PI / 2, 0, 0]}
-                            castShadow
-                            receiveShadow
+                            geometry={nodes.Cube012.geometry}
+                            material={materials["Marble.004"]}
+                            position={[-4.896, 3.708, 0]}
+                            rotation={[Math.PI / 2, -Math.PI / 2, 0]}
+                            scale={[1, 1, 40.262]}
+                        />
+                    </MeshCollider>
+                    {isOdd && (
+                        <>
+                            <MeshCollider type="cuboid">
+                                <mesh
+                                    geometry={nodes.Cube011.geometry}
+                                    material={materials["black concrete"]}
+                                    position={[-3.717, 3.673, -16.906]}
+                                    rotation={[Math.PI / 2, -Math.PI / 2, 0]}
+                                />
+                            </MeshCollider>
+                            <MeshCollider type="cuboid">
+                                <mesh
+                                    geometry={nodes.Cube013.geometry}
+                                    material={materials["black concrete.002"]}
+                                    position={[3.514, 3.673, -16.906]}
+                                    rotation={[Math.PI / 2, -Math.PI / 2, 0]}
+                                />
+                            </MeshCollider>
+                        </>
+                    )}
+                    <CuboidCollider
+                        args={[1, 4.581, 3.845]}
+                        position={[33.1, 4.273, -12.792]}
+                        rotation={[-Math.PI, 0, -Math.PI]}
+                        name="video-trigger"
+                        sensor
+                        onIntersectionEnter={({ other }) => {
+                            if (other.rigidBodyObject?.name === "player") {
+                                setShowYoutubeVideo(true);
+                            }
+                        }}
+                    >
+                        {/* <mesh geometry={nodes.collision_enter.geometry} scale={[1, 4.581, 3.845]}>
+                            <meshStandardMaterial color="blue" />
+                        </mesh> */}
+                    </CuboidCollider>
+                    <CuboidCollider
+                        args={[1, 4.581, 3.845]}
+                        position={[31.1, 4.273, -12.792]}
+                        rotation={[-Math.PI, 0, -Math.PI]}
+                        name="video-trigger"
+                        sensor
+                        onIntersectionEnter={({ other }) => {
+                            if (other.rigidBodyObject?.name === "player") {
+                                setShowYoutubeVideo(false);
+                            }
+                        }}
+                    >
+                        {/* <mesh geometry={nodes.collision_enter.geometry} scale={[1, 4.581, 3.845]}>
+                            <meshStandardMaterial color="red" />
+                        </mesh> */}
+                    </CuboidCollider>
+                    <MeshCollider type="trimesh">
+                        <mesh
+                            geometry={nodes.Cube.geometry}
+                            material={materials.Marble}
+                            position={[21.836, 8.459, -6.753]}
                         />
                     </MeshCollider>
                     <MeshCollider type="cuboid">
                         <mesh
                             ref={ref}
-                            geometry={nodes.Cube001.geometry}
+                            geometry={nodes.Cube002.geometry}
                             material={materials.Marble}
-                            position={[-3.704, 3.708, 0]}
-                            rotation={[Math.PI / 2, -Math.PI / 2, 0]}
-                            castShadow
-                            receiveShadow
+                            position={[-0.304, 0, 0]}
+                            rotation={[Math.PI / 2, 0, 0]}
                         />
                     </MeshCollider>
                     <MeshCollider type="cuboid">
                         <mesh
                             geometry={nodes.Cube004.geometry}
-                            material={materials["Plain black"]}
+                            material={materials.Plain}
                             position={[0, 7.377, 0]}
                             rotation={[Math.PI / 2, 0, 0]}
-                            castShadow
-                            receiveShadow
                         />
                     </MeshCollider>
                     <MeshCollider type="trimesh">
@@ -153,8 +204,6 @@ const CinemaChunk: FC<CinemaChunkProps> = ({ cinemaModel3D, index, videoUrl }) =
                             position={[4.617, 9.36, 0]}
                             rotation={[-Math.PI / 2, -Math.PI / 2, 0]}
                             scale={[-1, -1, -40.426]}
-                            castShadow
-                            receiveShadow
                         />
                     </MeshCollider>
                     <MeshCollider type="cuboid">
@@ -162,13 +211,12 @@ const CinemaChunk: FC<CinemaChunkProps> = ({ cinemaModel3D, index, videoUrl }) =
                             geometry={nodes.Cube006.geometry}
                             material={materials["Black concrete"]}
                             position={[51.298, 9.36, 0]}
-                            rotation={[Math.PI / 2, -Math.PI / 2, 0]}
-                            castShadow
-                            receiveShadow
+                            rotation={[0, -Math.PI / 2, 0]}
+                            scale={[22, 20, 0.03]}
                         >
                             <YoutubeVideoPlayer
                                 videoId={videoId}
-                                position={[0, 0, 1.5]}
+                                position={[0, 0.04, 2.5]}
                                 canVideoPlay={showYoutubeVideo}
                             />
                         </mesh>
@@ -178,11 +226,6 @@ const CinemaChunk: FC<CinemaChunkProps> = ({ cinemaModel3D, index, videoUrl }) =
                         position={[27.722, -0.0001, 0]}
                         rotation={[-Math.PI / 2, 0, 0]}
                         name="room-floor"
-                        onCollisionEnter={({ other }) => {
-                            if (other.rigidBodyObject?.name === "player") {
-                                setShowYoutubeVideo(true);
-                            }
-                        }}
                         onCollisionExit={({ other }) => {
                             if (other.rigidBodyObject?.name === "player") {
                                 setShowYoutubeVideo(false);
@@ -192,8 +235,6 @@ const CinemaChunk: FC<CinemaChunkProps> = ({ cinemaModel3D, index, videoUrl }) =
                         <mesh
                             geometry={nodes.Cube007.geometry}
                             material={materials.Marble}
-                            // position={[27.615, 0.009, 0]}
-                            // rotation={[Math.PI / 2, 0, 0]}
                             scale={[1.009, 1, 1]}
                             castShadow
                             receiveShadow
@@ -205,8 +246,6 @@ const CinemaChunk: FC<CinemaChunkProps> = ({ cinemaModel3D, index, videoUrl }) =
                         position={[27.69, 9.187, -16.527]}
                         rotation={[Math.PI, 0, Math.PI / 2]}
                         scale={[9.368, 23.816, 0.03]}
-                        castShadow
-                        receiveShadow
                     />
                     <mesh
                         geometry={nodes.Cube009.geometry}
@@ -214,52 +253,57 @@ const CinemaChunk: FC<CinemaChunkProps> = ({ cinemaModel3D, index, videoUrl }) =
                         position={[27.557, 9.328, 16.619]}
                         rotation={[Math.PI, 0, Math.PI / 2]}
                         scale={[9.368, 23.816, 0.03]}
-                        castShadow
-                        receiveShadow
                     />
                     <mesh
                         geometry={nodes.Cube010.geometry}
                         material={materials["Plain black"]}
-                        position={[27.722, 18.701, -0.016]}
+                        position={[27.722, 18.701, 0.164]}
                         rotation={[Math.PI / 2, 0, -Math.PI]}
                         scale={[-1, -1, -10.203]}
-                        castShadow
-                        receiveShadow
                     />
-                    <mesh
-                        geometry={nodes.stairs.geometry}
-                        material={materials.Marble}
-                        position={[21.291, 1.721, 3.731]}
-                        castShadow
-                        receiveShadow
-                    />
+                    <MeshCollider type="trimesh">
+                        <mesh
+                            geometry={nodes.stairs.geometry}
+                            material={materials.Marble}
+                            position={[21.291, 1.721, 6.26]}
+                            scale={[1, 1, 0.815]}
+                        />
+                    </MeshCollider>
                     <mesh
                         geometry={nodes.Cube003.geometry}
                         material={materials["black concrete"]}
                         position={[51.162, 10.214, 0]}
                         rotation={[Math.PI / 2, -Math.PI / 2, 0]}
                         scale={0.568}
-                        castShadow
-                        receiveShadow
                     />
                     <mesh
                         geometry={nodes.Neon.geometry}
-                        material={materials.Neon}
+                        // material={materials.Neon}
                         position={[-3.619, 7.289, -0.006]}
                         rotation={[-Math.PI / 2, 0, -Math.PI]}
                         scale={[-0.066, -16.558, -0.065]}
-                        castShadow
-                        receiveShadow
-                    />
+                    >
+                        <meshStandardMaterial
+                            color="#F79292"
+                            emissive="#F79292"
+                            emissiveIntensity={10}
+                            toneMapped={false}
+                        />
+                    </mesh>
                     <mesh
                         geometry={nodes.Neon001.geometry}
-                        material={materials["Neon.001"]}
+                        // material={materials["Neon.001"]}
                         position={[3.346, 7.289, -0.006]}
                         rotation={[-Math.PI / 2, 0, -Math.PI]}
                         scale={[-0.066, -16.558, -0.065]}
-                        castShadow
-                        receiveShadow
-                    />
+                    >
+                        <meshStandardMaterial
+                            color="#F79292"
+                            emissive="#F79292"
+                            emissiveIntensity={10}
+                            toneMapped={false}
+                        />
+                    </mesh>
                 </group>
             </Suspense>
         </GameRigidBody>
