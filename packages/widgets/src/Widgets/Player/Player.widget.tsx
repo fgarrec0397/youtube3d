@@ -15,6 +15,7 @@ import { FC, Ref, useEffect, useRef, useState } from "react";
 import { PointerLockControls as PointerLockControlsImpl } from "three-stdlib";
 
 import useGameManager from "../GameManager/_actions/hooks/useGameManager";
+import usePlayer from "./_actions/hooks/usePlayer";
 
 export type PlayerProps = GameEditableWidget;
 
@@ -25,15 +26,17 @@ const sideVector = new Vector3();
 
 const Player: FC<PlayerProps> = ({ position }, ref) => {
     const { pointerLockEnable } = useGameManager();
+    const { canPlayerMove } = usePlayer();
     const { camera, cameraRef } = useCreateCamera("widgetCamera", [0, 0, 0], ref!, true);
-    const pointerLockRef = useRef<PointerLockControlsImpl>(null);
     const rigidbodyRef = useRef<RigidBodyRefType>(null);
+    const [pointerLockRef, setPointerLockRef] = useState<PointerLockControlsImpl | null>(null);
     const [movementDirection, setMovementDirection] = useState({
         forward: 0,
         backward: 0,
         right: 0,
         left: 0,
     });
+    const [isEnabled, setIsEnabled] = useState(true);
     const [isJumpPressed, setIsJumpPressed] = useState(false);
     const { isGamePreview, isGame, isEditor } = useEditor();
     const physics = usePhysics();
@@ -46,20 +49,27 @@ const Player: FC<PlayerProps> = ({ position }, ref) => {
     };
 
     useEffect(() => {
-        if (!pointerLockRef.current) {
+        if (!pointerLockEnable) {
+            pointerLockRef?.unlock();
+            setTimeout(() => {
+                setIsEnabled(false);
+            }, 10);
+        }
+
+        if (pointerLockEnable) {
+            setIsEnabled(true);
+
+            setTimeout(() => {
+                pointerLockRef?.lock();
+            }, 10);
+        }
+    }, [pointerLockEnable, pointerLockRef]);
+
+    useInputs((input) => {
+        if (!canPlayerMove) {
             return;
         }
 
-        if (!pointerLockEnable) {
-            pointerLockRef.current.unlock();
-        }
-
-        // if (pointerLockEnable) {
-        //     pointerLockRef.current.lock();
-        // }
-    }, [pointerLockEnable]);
-
-    useInputs((input) => {
         if (input.forwardDown) {
             updateDirection("forward", 1);
         }
@@ -134,8 +144,6 @@ const Player: FC<PlayerProps> = ({ position }, ref) => {
         if (isJumpPressed && grounded) rigidbodyRef.current.setLinvel({ x: 10, y: 5, z: 0 }, true);
     });
 
-    console.log(pointerLockEnable, "pointerLockEnable");
-
     return (
         <>
             <GameRigidBody
@@ -147,12 +155,14 @@ const Player: FC<PlayerProps> = ({ position }, ref) => {
                 enabledRotations={[false, false, false]}
             >
                 <perspectiveCamera ref={cameraRef as Ref<PerspectiveCamera>} position={[0, 5, 0]} />
-                <PointerLockControls
-                    // TODO - set domElement here to the canvas
-                    ref={pointerLockRef}
-                    enabled={isGame || isGamePreview}
-                    camera={camera}
-                />
+
+                {isEnabled && (
+                    <PointerLockControls
+                        ref={setPointerLockRef}
+                        enabled={isGame || isGamePreview}
+                        camera={camera}
+                    />
+                )}
                 <mesh scale={[0.5, 1.5, 0.5]}>
                     <capsuleGeometry />
                     <meshStandardMaterial color="white" />

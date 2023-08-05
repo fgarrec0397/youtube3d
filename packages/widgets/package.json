@@ -16,6 +16,7 @@
     "@granity/prettier-config": "*",
     "@granity/three": "*",
     "@granity/typescript-config": "*",
+    "@granity/icons": "*",
     "@granity/ui": "*",
     "@reduxjs/toolkit": "^1.9.3",
     "@types/react": "^18.0.28",
