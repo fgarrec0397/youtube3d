@@ -1,18 +1,7 @@
 import { createGameWidget, GameEditableWidget, GameOptionsFieldTypes } from "@granity/engine";
-import { BakeShadows, Effects } from "@granity/three/drei";
-import { extend, Object3DNode, RectAreaLightProps } from "@granity/three/fiber";
 import { FC } from "react";
-import { GLTF, RectAreaLightHelper, UnrealBloomPass } from "three-stdlib";
 
 import CinemaChunk from "./Components/CinemaChunk";
-
-// extend({ UnrealBloomPass });
-
-// declare module "@granity/three/fiber" {
-//     interface ThreeElements {
-//         unrealBloomPass: Object3DNode<UnrealBloomPass, typeof UnrealBloomPass>;
-//     }
-// }
 
 export type CinemaProps = GameEditableWidget & {
     model3D: string;
@@ -29,11 +18,7 @@ const Cinema: FC<CinemaProps> = ({ model3D }) => {
 
     return (
         <>
-            {/* <Effects disableGamma>
-                <unrealBloomPass threshold={1} strength={1.0} radius={0.5} />
-            </Effects> */}
-            {/* <fog attach="fog" color="#ffffff" near={1} far={2} /> */}
-            {/* <BakeShadows /> */}
+            <fog attach="fog" color="#ffffff" near={1} far={2} />
             {myTestArray.map((x, index) => (
                 <CinemaChunk key={x} videoUrl={x} index={index} cinemaModel3D={model3D} />
             ))}

@@ -2,20 +2,12 @@ import { GameRigidBody } from "@granity/engine";
 import { Vector3Array } from "@granity/helpers";
 import { CuboidCollider, MeshCollider } from "@granity/physics";
 import { Box3, Mesh, Vector3 } from "@granity/three";
-import {
-    BakeShadows,
-    Effects,
-    MeshReflectorMaterial,
-    useGLTF,
-    useHelper,
-} from "@granity/three/drei";
-import { extend, Object3DNode, RectAreaLightProps } from "@granity/three/fiber";
+import { useGLTF, useHelper } from "@granity/three/drei";
 import { FC, MutableRefObject, Suspense, useEffect, useMemo, useRef, useState } from "react";
-import { DirectionalLight, DirectionalLightHelper, Object3D, RectAreaLight } from "three";
-import { GLTF, RectAreaLightHelper, UnrealBloomPass } from "three-stdlib";
+import { Object3D, RectAreaLight } from "three";
+import { GLTF, RectAreaLightHelper } from "three-stdlib";
 
 import extractVideoIdFromUrl from "../_actions/utilities/extractYoutubeVideoIdFromUrl";
-import MeshesMaterial from "./MeshesMaterial";
 import YoutubeVideoPlayer from "./YoutubeVideoPlayer";
 
 export type CinemaChunkProps = {
@@ -63,9 +55,7 @@ type GLTFResult = GLTF & {
 const CinemaChunk: FC<CinemaChunkProps> = ({ cinemaModel3D, index, videoUrl }) => {
     const { nodes, materials } = useGLTF(cinemaModel3D) as GLTFResult;
     const ref = useRef<Mesh>(null);
-    const floorRef = useRef<Mesh>(null);
     const lightRef = useRef<RectAreaLight>(null);
-    const lightRef2 = useRef<DirectionalLight>(null);
     const [size, setSize] = useState<Vector3>(new Vector3());
     const [videoId, setVideoId] = useState<string | undefined>();
     const [showYoutubeVideo, setShowYoutubeVideo] = useState(false);
@@ -276,7 +266,7 @@ const CinemaChunk: FC<CinemaChunkProps> = ({ cinemaModel3D, index, videoUrl }) =
                         rotation={[Math.PI / 2, -Math.PI / 2, 0]}
                         scale={0.568}
                     />
-                    <mesh
+                    {/* <mesh
                         geometry={nodes.Neon.geometry}
                         // material={materials.Neon}
                         position={[-3.619, 7.289, -0.006]}
@@ -303,7 +293,7 @@ const CinemaChunk: FC<CinemaChunkProps> = ({ cinemaModel3D, index, videoUrl }) =
                             emissiveIntensity={10}
                             toneMapped={false}
                         />
-                    </mesh>
+                    </mesh> */}
                 </group>
             </Suspense>
         </GameRigidBody>
