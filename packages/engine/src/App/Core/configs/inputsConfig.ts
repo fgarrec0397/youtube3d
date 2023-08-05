@@ -162,5 +162,13 @@ export default {
             preventDefault: false,
             isFire: true, // TODO - check to do something with this
         },
+        {
+            name: "openVideoLinksDialog",
+            event: "keyup",
+            code: "KeyQ",
+            ctrlKey: false,
+            shiftKey: false,
+            preventDefault: false,
+        },
     ],
 } as InputsConfig;
