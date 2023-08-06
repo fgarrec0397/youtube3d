@@ -2,7 +2,7 @@ import { GameRigidBody } from "@granity/engine";
 import { Vector3Array } from "@granity/helpers";
 import { CuboidCollider, MeshCollider } from "@granity/physics";
 import { Box3, Mesh, Vector3 } from "@granity/three";
-import { useGLTF, useHelper } from "@granity/three/drei";
+import { useCubeTexture, useGLTF, useHelper } from "@granity/three/drei";
 import { FC, MutableRefObject, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { Object3D, RectAreaLight } from "three";
 import { GLTF, RectAreaLightHelper } from "three-stdlib";
@@ -59,9 +59,11 @@ const CinemaChunk: FC<CinemaChunkProps> = ({ cinemaModel3D, index, videoUrl }) =
     const [size, setSize] = useState<Vector3>(new Vector3());
     const [videoId, setVideoId] = useState<string | undefined>();
     const [showYoutubeVideo, setShowYoutubeVideo] = useState(false);
+    const [thumnailURL, setThumnailURL] = useState<string>();
+    const envMap = useCubeTexture(["0.jpg"], { path: thumnailURL || "" });
+    // const thumbnail = `https://i.ytimg.com/vi/yhB3BgJyGl8/0.jpg`
 
     useHelper(lightRef as unknown as MutableRefObject<Object3D<Event>>, RectAreaLightHelper);
-    // useHelper(lightRef2 as unknown as MutableRefObject<Object3D<Event>>, DirectionalLightHelper);
 
     const isOdd = useMemo(() => {
         return index % 2 !== 0;
@@ -69,6 +71,7 @@ const CinemaChunk: FC<CinemaChunkProps> = ({ cinemaModel3D, index, videoUrl }) =
 
     useEffect(() => {
         const youtubeVideoId = extractVideoIdFromUrl(videoUrl);
+        setThumnailURL(`https://i.ytimg.com/vi/${youtubeVideoId}/`);
         setVideoId(youtubeVideoId);
     }, [videoId, videoUrl]);
 
@@ -265,6 +268,12 @@ const CinemaChunk: FC<CinemaChunkProps> = ({ cinemaModel3D, index, videoUrl }) =
                         position={[51.162, 10.214, 0]}
                         rotation={[Math.PI / 2, -Math.PI / 2, 0]}
                         scale={0.568}
+                    />
+
+                    <mesh
+                        geometry={nodes.Cube001.geometry}
+                        material={materials["black concrete"]}
+                        position={[3.354, 3.827, -9.275]}
                     />
                     {/* <mesh
                         geometry={nodes.Neon.geometry}

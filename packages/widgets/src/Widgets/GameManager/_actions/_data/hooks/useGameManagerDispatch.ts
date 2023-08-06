@@ -1,6 +1,6 @@
 import { useAppDispatch } from "@granity/engine";
 
-import { setPointerLockEnable } from "../state/gameManagerReducer";
+import { setPointerLockEnable, setVideosLinks } from "../state/gameManagerReducer";
 
 export default () => {
     const dispatch = useAppDispatch();
@@ -9,7 +9,12 @@ export default () => {
         dispatch(setPointerLockEnable(value));
     };
 
+    const dispatchSetVideosLinks = (value: string[]) => {
+        dispatch(setVideosLinks(value));
+    };
+
     return {
         dispatchSetPointerLockEnable,
+        dispatchSetVideosLinks,
     };
 };

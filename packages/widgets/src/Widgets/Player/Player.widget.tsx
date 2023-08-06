@@ -8,8 +8,9 @@ import {
     useGameUpdate,
     useInputs,
 } from "@granity/engine";
+import { isEqual, unSerializeVector3, usePrevious } from "@granity/helpers";
 import { RAPIER, RigidBodyRefType, usePhysics } from "@granity/physics";
-import { PerspectiveCamera, Vector3 } from "@granity/three";
+import { PerspectiveCamera, Quaternion, Vector3 } from "@granity/three";
 import { PointerLockControls } from "@granity/three/drei";
 import { FC, Ref, useEffect, useRef, useState } from "react";
 import { PointerLockControls as PointerLockControlsImpl } from "three-stdlib";
@@ -24,8 +25,8 @@ const direction = new Vector3();
 const frontVector = new Vector3();
 const sideVector = new Vector3();
 
-const Player: FC<PlayerProps> = ({ position }, ref) => {
-    const { pointerLockEnable } = useGameManager();
+const Player: FC<PlayerProps> = ({ position, rotation }, ref) => {
+    const { pointerLockEnable, videosLinks } = useGameManager();
     const { canPlayerMove } = usePlayer();
     const { camera, cameraRef } = useCreateCamera("widgetCamera", [0, 0, 0], ref!, true);
     const rigidbodyRef = useRef<RigidBodyRefType>(null);
@@ -38,6 +39,7 @@ const Player: FC<PlayerProps> = ({ position }, ref) => {
     });
     const [isEnabled, setIsEnabled] = useState(true);
     const [isJumpPressed, setIsJumpPressed] = useState(false);
+    const previousVideosLinks = usePrevious(videosLinks);
     const { isGamePreview, isGame, isEditor } = useEditor();
     const physics = usePhysics();
 
@@ -64,6 +66,21 @@ const Player: FC<PlayerProps> = ({ position }, ref) => {
             }, 10);
         }
     }, [pointerLockEnable, pointerLockRef]);
+
+    useEffect(() => {
+        if (!rigidbodyRef.current) {
+            return;
+        }
+
+        if (!previousVideosLinks) {
+            return;
+        }
+        console.log(previousVideosLinks, "previousVideosLinks");
+
+        // if (!isEqual(previousVideosLinks, videosLinks)) {
+        //     rigidbodyRef.current?.setTranslation(unSerializeVector3(position), true);
+        // }
+    }, [position, previousVideosLinks, rotation, videosLinks]);
 
     useInputs((input) => {
         if (!canPlayerMove) {
@@ -120,8 +137,8 @@ const Player: FC<PlayerProps> = ({ position }, ref) => {
 
         const velocity = rigidbodyRef.current.linvel();
 
-        frontVector.set(0, 0, movementDirection.backward - movementDirection.forward);
-        sideVector.set(movementDirection.left - movementDirection.right, 0, 0);
+        frontVector.set(0, 0, movementDirection.forward - movementDirection.backward);
+        sideVector.set(movementDirection.right - movementDirection.left, 0, 0);
 
         direction
             .subVectors(frontVector, sideVector)

@@ -33,7 +33,9 @@ type VideosLinksUIStyles = {
     dialogActions?: DialogActionsProps;
     rowWrapper?: BoxProps;
     textField?: TextFieldProps;
-    addRowButton?: ButtonProps;
+    filledButton?: ButtonProps;
+    outlinedButton?: ButtonProps;
+    textButton?: ButtonProps;
     deleteButton?: IconButtonProps;
 };
 
@@ -48,9 +50,11 @@ const styles: VideosLinksUIStyles = {
     },
     dialogContent: {
         sx: {
+            paddingTop: "16px !important",
             padding: "16px",
             display: "flex",
             flexDirection: "column",
+            alignItems: "flex-start",
             backgroundColor: "#fff",
             color: "#0f0f0f",
         },
@@ -59,6 +63,8 @@ const styles: VideosLinksUIStyles = {
         sx: {
             backgroundColor: "#fff",
             color: "#0f0f0f",
+            paddingTop: "16px !important",
+            padding: "16px",
         },
     },
     rowWrapper: {
@@ -85,14 +91,36 @@ const styles: VideosLinksUIStyles = {
             },
         },
     },
-    addRowButton: {
+    filledButton: {
+        fullWidth: false,
+        sx: {
+            color: "#fff",
+            backgroundColor: "#ff0000",
+            "&:hover": {
+                backgroundColor: "#ff3c3c",
+                color: "#fff",
+            },
+        },
+    },
+    outlinedButton: {
         fullWidth: false,
         variant: "outlined",
         sx: {
-            marginTop: "24px",
-            backgroundColor: "#ff0000",
+            color: "#0f0f0f",
+            borderColor: "#0f0f0f",
             "&:hover": {
-                backgroundColor: "#ff0000",
+                backgroundColor: "#dfdfdf",
+                color: "#525252",
+                borderColor: "#525252",
+            },
+        },
+    },
+    textButton: {
+        variant: "text",
+        sx: {
+            color: "#0f0f0f",
+            "&:hover": {
+                backgroundColor: "#ffebeb",
             },
         },
     },
@@ -104,24 +132,43 @@ const styles: VideosLinksUIStyles = {
 };
 
 const VideosLinksUI: FC = () => {
-    const { updatePointerLockEnable } = useGameManager();
+    const { updatePointerLockEnable, updateVideosLinks, videosLinks } = useGameManager();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [fields, setFields] = useState<Inputs[]>([
-        {
-            id: 0,
-            value: "",
-        },
-    ]);
+    const [fields, setFields] = useState<Inputs[]>(
+        videosLinks?.map((x, index) => ({
+            id: index,
+            value: x,
+        })) || [
+            {
+                id: 0,
+                value: "",
+            },
+        ]
+    );
 
     useInputs((inputs) => {
         if (inputs.openVideoLinksDialog) {
-            setIsDialogOpen(!isDialogOpen);
+            setIsDialogOpen(true);
         }
     }, []);
 
     useEffect(() => {
         updatePointerLockEnable(!isDialogOpen);
     }, [isDialogOpen, updatePointerLockEnable]);
+
+    useEffect(() => {
+        setFields(
+            videosLinks?.map((x, index) => ({
+                id: index,
+                value: x,
+            })) || [
+                {
+                    id: 0,
+                    value: "",
+                },
+            ]
+        );
+    }, [videosLinks]);
 
     const updateRow = (
         event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -161,7 +208,7 @@ const VideosLinksUI: FC = () => {
     };
 
     const confirm = () => {
-        // updateVideosLinks(fields.map((x) => x.value));
+        updateVideosLinks(fields.map((x) => x.value));
         setIsDialogOpen(false);
     };
 
@@ -186,13 +233,17 @@ const VideosLinksUI: FC = () => {
                         </IconButton>
                     </Box>
                 ))}
-                <Button onClick={addRow} {...styles.addRowButton}>
+                <Button onClick={addRow} {...styles.textButton}>
                     Add a row
                 </Button>
             </DialogContent>
-            <DialogActions>
-                <Button onClick={confirm}>Confirm</Button>
-                <Button onClick={cancel}>Cancel</Button>
+            <DialogActions {...styles.dialogActions}>
+                <Button onClick={confirm} {...styles.filledButton}>
+                    Confirm
+                </Button>
+                <Button onClick={cancel} {...styles.outlinedButton}>
+                    Cancel
+                </Button>
             </DialogActions>
         </Dialog>
     );
