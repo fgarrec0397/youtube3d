@@ -2,9 +2,9 @@ import { GameRigidBody } from "@granity/engine";
 import { Vector3Array } from "@granity/helpers";
 import { CuboidCollider, MeshCollider } from "@granity/physics";
 import { Box3, Mesh, Vector3 } from "@granity/three";
-import { useCubeTexture, useGLTF, useHelper } from "@granity/three/drei";
+import { useCubeTexture, useGLTF, useHelper, useTexture } from "@granity/three/drei";
 import { FC, MutableRefObject, Suspense, useEffect, useMemo, useRef, useState } from "react";
-import { Object3D, RectAreaLight } from "three";
+import THREE, { DoubleSide, Object3D, RectAreaLight } from "three";
 import { GLTF, RectAreaLightHelper } from "three-stdlib";
 
 import extractVideoIdFromUrl from "../_actions/utilities/extractYoutubeVideoIdFromUrl";
@@ -13,6 +13,7 @@ import YoutubeVideoPlayer from "./YoutubeVideoPlayer";
 export type CinemaChunkProps = {
     cinemaModel3D: string;
     index: number;
+    thumbnails?: string[];
     videoUrl: string;
     position?: Vector3Array;
 };
@@ -52,7 +53,7 @@ type GLTFResult = GLTF & {
     };
 };
 
-const CinemaChunk: FC<CinemaChunkProps> = ({ cinemaModel3D, index, videoUrl }) => {
+const CinemaChunk: FC<CinemaChunkProps> = ({ cinemaModel3D, index, videoUrl, thumbnails }) => {
     const { nodes, materials } = useGLTF(cinemaModel3D) as GLTFResult;
     const ref = useRef<Mesh>(null);
     const lightRef = useRef<RectAreaLight>(null);
@@ -60,8 +61,17 @@ const CinemaChunk: FC<CinemaChunkProps> = ({ cinemaModel3D, index, videoUrl }) =
     const [videoId, setVideoId] = useState<string | undefined>();
     const [showYoutubeVideo, setShowYoutubeVideo] = useState(false);
     const [thumnailURL, setThumnailURL] = useState<string>();
-    const envMap = useCubeTexture(["0.jpg"], { path: thumnailURL || "" });
+    console.log(thumbnails?.[0], "thumbnails?.[0]");
+
+    // const texture = useTexture(`https://cors-anywhere.herokuapp.com/${thumbnails?.[0]}` || "");
+    const texture = useTexture(
+        `https://cors-anywhere.herokuapp.com/https://i.ytimg.com/vi/yhB3BgJyGl8/hqdefault.jpg` || ""
+    );
+    // texture.flipY = false;
+    // texture.rotation = 1;
+    // const envMap = useCubeTexture(["0.jpg"], { path: "https://i.ytimg.com/vi/yhB3BgJyGl8/" });
     // const thumbnail = `https://i.ytimg.com/vi/yhB3BgJyGl8/0.jpg`
+    // console.log(envMap, "envMap");
 
     useHelper(lightRef as unknown as MutableRefObject<Object3D<Event>>, RectAreaLightHelper);
 
@@ -102,8 +112,6 @@ const CinemaChunk: FC<CinemaChunkProps> = ({ cinemaModel3D, index, videoUrl }) =
                         intensity={5}
                         position={[0, 7.3, 0]}
                         rotation={[-Math.PI / 2, 0, 0]}
-                        castShadow
-                        receiveShadow
                     />
                     <MeshCollider type="cuboid">
                         <mesh
@@ -272,9 +280,13 @@ const CinemaChunk: FC<CinemaChunkProps> = ({ cinemaModel3D, index, videoUrl }) =
 
                     <mesh
                         geometry={nodes.Cube001.geometry}
-                        material={materials["black concrete"]}
+                        // material={materials["black concrete"]}
                         position={[3.354, 3.827, -9.275]}
-                    />
+                        rotation={[Math.PI / 2, 0, 0]}
+                        scale={[1, 2, 4]}
+                    >
+                        <meshStandardMaterial map={texture} side={DoubleSide} />
+                    </mesh>
                     {/* <mesh
                         geometry={nodes.Neon.geometry}
                         // material={materials.Neon}

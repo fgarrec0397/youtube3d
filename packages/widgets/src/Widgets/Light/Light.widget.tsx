@@ -36,8 +36,6 @@ const Light: FC<LightProps> = ({ lightType, intensity, direction }, ref) => {
                 intensity={intensity}
                 shadow-mapSize-width={1024}
                 shadow-mapSize-height={1024}
-                castShadow
-                receiveShadow
                 shadow-bias={-0.001}
                 target-position={direction || [0, 0, 0]}
             >
@@ -47,7 +45,7 @@ const Light: FC<LightProps> = ({ lightType, intensity, direction }, ref) => {
     }
 
     if (lightType === "ambientLight") {
-        return <ambientLight ref={ref} intensity={intensity} color="#ffffff" castShadow />;
+        return <ambientLight ref={ref} intensity={intensity} color="#ffffff" />;
     }
 
     if (lightType === "rectAreaLight") {

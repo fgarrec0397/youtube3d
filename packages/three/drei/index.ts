@@ -11,5 +11,6 @@ export { useContextBridge } from "@react-three/drei/core/useContextBridge";
 export { useCubeTexture } from "@react-three/drei/core/useCubeTexture";
 export { useGLTF } from "@react-three/drei/core/useGLTF";
 export { useHelper } from "@react-three/drei/core/useHelper";
+export { useTexture } from "@react-three/drei/core/useTexture";
 export { Html } from "@react-three/drei/web/Html";
 export { Select } from "@react-three/drei/web/Select";
