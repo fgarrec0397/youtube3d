@@ -1,11 +1,10 @@
-import useWidgetStarterService from "../_data/hooks/useCinemaService";
+import useGameManager from "@widgets/Widgets/GameManager/_actions/hooks/useGameManager";
+import { useMemo } from "react";
 
 export default () => {
-    const { add, widgetStarterMessage } = useWidgetStarterService();
+    const { pointerLockEnable } = useGameManager();
 
-    const makeThisWidgetAlive = () => {
-        add("Your widget behaviour here!");
-    };
+    const canDisplayThumbnails = useMemo(() => pointerLockEnable, [pointerLockEnable]);
 
-    return { makeThisWidgetAlive, widgetStarterMessage };
+    return { canDisplayThumbnails };
 };

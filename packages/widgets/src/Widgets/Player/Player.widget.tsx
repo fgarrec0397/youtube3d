@@ -1,6 +1,7 @@
 import {
     createGameWidget,
     GameEditableWidget,
+    GameOptionsFieldTypes,
     GameRigidBody,
     helpersTypes,
     useCreateCamera,
@@ -10,26 +11,36 @@ import {
 } from "@granity/engine";
 import { isEqual, unSerializeVector3, usePrevious } from "@granity/helpers";
 import { RAPIER, RigidBodyRefType, usePhysics } from "@granity/physics";
-import { PerspectiveCamera, Quaternion, Vector3 } from "@granity/three";
+import {
+    AudioListener,
+    AudioLoader,
+    PerspectiveCamera,
+    PositionalAudio,
+    Vector3,
+} from "@granity/three";
 import { PointerLockControls } from "@granity/three/drei";
+import { useLoader } from "@granity/three/fiber";
 import { FC, Ref, useEffect, useRef, useState } from "react";
 import { PointerLockControls as PointerLockControlsImpl } from "three-stdlib";
 
 import useGameManager from "../GameManager/_actions/hooks/useGameManager";
 import usePlayer from "./_actions/hooks/usePlayer";
 
-export type PlayerProps = GameEditableWidget;
+export type PlayerProps = GameEditableWidget & {
+    walkSoundEffect?: string;
+};
 
 const SPEED = 5;
 const direction = new Vector3();
 const frontVector = new Vector3();
 const sideVector = new Vector3();
 
-const Player: FC<PlayerProps> = ({ position, rotation }, ref) => {
+const Player: FC<PlayerProps> = ({ position, rotation, walkSoundEffect }, ref) => {
     const { pointerLockEnable, videosLinks } = useGameManager();
     const { canPlayerMove } = usePlayer();
     const { camera, cameraRef } = useCreateCamera("widgetCamera", [0, 0, 0], ref!, true);
     const rigidbodyRef = useRef<RigidBodyRefType>(null);
+    const walkSoundEffectRef = useRef<PositionalAudio>(null);
     const [pointerLockRef, setPointerLockRef] = useState<PointerLockControlsImpl | null>(null);
     const [movementDirection, setMovementDirection] = useState({
         forward: 0,
@@ -39,9 +50,12 @@ const Player: FC<PlayerProps> = ({ position, rotation }, ref) => {
     });
     const [isEnabled, setIsEnabled] = useState(true);
     const [isJumpPressed, setIsJumpPressed] = useState(false);
+    const [listener] = useState(() => new AudioListener());
     const previousVideosLinks = usePrevious(videosLinks);
     const { isGamePreview, isGame, isEditor } = useEditor();
     const physics = usePhysics();
+
+    const buffer = useLoader(AudioLoader, walkSoundEffect || "");
 
     const updateDirection = (key: keyof typeof movementDirection, value: 0 | 1) => {
         setMovementDirection((prev) => ({
@@ -75,12 +89,34 @@ const Player: FC<PlayerProps> = ({ position, rotation }, ref) => {
         if (!previousVideosLinks) {
             return;
         }
-        console.log(previousVideosLinks, "previousVideosLinks");
 
-        // if (!isEqual(previousVideosLinks, videosLinks)) {
-        //     rigidbodyRef.current?.setTranslation(unSerializeVector3(position), true);
-        // }
+        if (!isEqual(previousVideosLinks, videosLinks)) {
+            rigidbodyRef.current?.setTranslation(unSerializeVector3(position), true);
+        }
     }, [position, previousVideosLinks, rotation, videosLinks]);
+
+    const playWalkSound = () => {
+        if (!walkSoundEffectRef.current) {
+            return;
+        }
+
+        if (!walkSoundEffectRef.current.isPlaying) {
+            walkSoundEffectRef.current.setBuffer(buffer);
+            walkSoundEffectRef.current.setRefDistance(1);
+            walkSoundEffectRef.current.setLoop(true);
+            walkSoundEffectRef.current.play();
+        }
+    };
+
+    const stopWalkSound = () => {
+        if (!walkSoundEffectRef.current) {
+            return;
+        }
+
+        if (walkSoundEffectRef.current.isPlaying) {
+            walkSoundEffectRef.current.stop();
+        }
+    };
 
     useInputs((input) => {
         if (!canPlayerMove) {
@@ -89,34 +125,42 @@ const Player: FC<PlayerProps> = ({ position, rotation }, ref) => {
 
         if (input.forwardDown) {
             updateDirection("forward", 1);
+            playWalkSound();
         }
 
         if (input.forwardUp) {
             updateDirection("forward", 0);
+            stopWalkSound();
         }
 
         if (input.rightDown) {
             updateDirection("right", 1);
+            playWalkSound();
         }
 
         if (input.rightUp) {
             updateDirection("right", 0);
+            stopWalkSound();
         }
 
         if (input.backwardDown) {
             updateDirection("backward", 1);
+            playWalkSound();
         }
 
         if (input.backwardUp) {
             updateDirection("backward", 0);
+            stopWalkSound();
         }
 
         if (input.leftDown) {
             updateDirection("left", 1);
+            playWalkSound();
         }
 
         if (input.leftUp) {
             updateDirection("left", 0);
+            stopWalkSound();
         }
 
         if (input.jump) {
@@ -171,6 +215,8 @@ const Player: FC<PlayerProps> = ({ position, rotation }, ref) => {
                 key={position.toString()}
                 enabledRotations={[false, false, false]}
             >
+                <positionalAudio ref={walkSoundEffectRef} args={[listener]} />
+                {/* <PositionalAudio ref={walkSoundEffectRef} url={walkSoundEffect} distance={1} loop /> */}
                 <perspectiveCamera ref={cameraRef as Ref<PerspectiveCamera>} position={[0, 5, 0]} />
 
                 {isEnabled && (
@@ -198,4 +244,12 @@ export const widget = createGameWidget({
         gizmo: true,
     },
     name: "Player",
+    options: [
+        {
+            name: "walkSoundEffect",
+            displayName: "Walk Sound Effect",
+            fieldType: GameOptionsFieldTypes.File,
+            defaultValue: "",
+        },
+    ],
 });

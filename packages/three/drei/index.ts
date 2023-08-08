@@ -4,6 +4,7 @@ export { PerspectiveCamera } from "@react-three/drei/core/PerspectiveCamera";
 // export { PointerLockControls } from "@react-three/drei/core/PointerLockControls";
 export { PointerLockControls } from "./PointerLockControls";
 export { Effects } from "@react-three/drei";
+export { PositionalAudio } from "@react-three/drei";
 export { BakeShadows } from "@react-three/drei/core/BakeShadows";
 export { MeshReflectorMaterial } from "@react-three/drei/core/MeshReflectorMaterial";
 export { Sky } from "@react-three/drei/core/Sky";

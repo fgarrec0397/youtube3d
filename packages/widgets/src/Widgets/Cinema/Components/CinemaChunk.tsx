@@ -2,11 +2,12 @@ import { GameRigidBody } from "@granity/engine";
 import { Vector3Array } from "@granity/helpers";
 import { CuboidCollider, MeshCollider } from "@granity/physics";
 import { Box3, Mesh, Vector3 } from "@granity/three";
-import { useCubeTexture, useGLTF, useHelper, useTexture } from "@granity/three/drei";
+import { Html, useGLTF, useHelper } from "@granity/three/drei";
 import { FC, MutableRefObject, Suspense, useEffect, useMemo, useRef, useState } from "react";
-import THREE, { DoubleSide, Object3D, RectAreaLight } from "three";
+import { MeshStandardMaterial, Object3D, RectAreaLight } from "three";
 import { GLTF, RectAreaLightHelper } from "three-stdlib";
 
+import useCinema from "../_actions/hooks/useCinema";
 import extractVideoIdFromUrl from "../_actions/utilities/extractYoutubeVideoIdFromUrl";
 import YoutubeVideoPlayer from "./YoutubeVideoPlayer";
 
@@ -20,58 +21,47 @@ export type CinemaChunkProps = {
 
 type GLTFResult = GLTF & {
     nodes: {
-        Cube012: THREE.Mesh;
-        Cube011: THREE.Mesh;
-        Cube013: THREE.Mesh;
-        collision_enter: THREE.Mesh;
-        Cube: THREE.Mesh;
-        Cube002: THREE.Mesh;
-        Cube001: THREE.Mesh;
-        Cube004: THREE.Mesh;
-        Cube005: THREE.Mesh;
-        Cube006: THREE.Mesh;
-        Cube007: THREE.Mesh;
-        Cube008: THREE.Mesh;
-        Cube009: THREE.Mesh;
-        Cube010: THREE.Mesh;
-        stairs: THREE.Mesh;
-        Cube003: THREE.Mesh;
-        Neon: THREE.Mesh;
-        Neon001: THREE.Mesh;
+        Cube012: Mesh;
+        Cube011: Mesh;
+        Cube013: Mesh;
+        collision_enter: Mesh;
+        Cube: Mesh;
+        Cube002: Mesh;
+        Cube001: Mesh;
+        Cube004: Mesh;
+        Cube005: Mesh;
+        Cube006: Mesh;
+        Cube007: Mesh;
+        Cube008: Mesh;
+        Cube009: Mesh;
+        Cube010: Mesh;
+        stairs: Mesh;
+        Cube003: Mesh;
+        Neon: Mesh;
+        Neon001: Mesh;
     };
     materials: {
-        ["Marble.004"]: THREE.MeshStandardMaterial;
-        ["black concrete"]: THREE.MeshStandardMaterial;
-        ["black concrete.002"]: THREE.MeshStandardMaterial;
-        Plain: THREE.MeshStandardMaterial;
-        Marble: THREE.MeshStandardMaterial;
-        ["Plain black"]: THREE.MeshStandardMaterial;
-        ["Black concrete"]: THREE.MeshStandardMaterial;
-        ["black concrete"]: THREE.MeshStandardMaterial;
-        Neon: THREE.MeshStandardMaterial;
-        ["Neon.001"]: THREE.MeshStandardMaterial;
+        ["Marble.004"]: MeshStandardMaterial;
+        ["black concrete"]: MeshStandardMaterial;
+        ["black concrete.002"]: MeshStandardMaterial;
+        Plain: MeshStandardMaterial;
+        Marble: MeshStandardMaterial;
+        ["Plain black"]: MeshStandardMaterial;
+        ["Black concrete"]: MeshStandardMaterial;
+        ["black concrete"]: MeshStandardMaterial;
+        Neon: MeshStandardMaterial;
+        ["Neon.001"]: MeshStandardMaterial;
     };
 };
 
-const CinemaChunk: FC<CinemaChunkProps> = ({ cinemaModel3D, index, videoUrl, thumbnails }) => {
+const CinemaChunk: FC<CinemaChunkProps> = ({ cinemaModel3D, index, videoUrl }) => {
     const { nodes, materials } = useGLTF(cinemaModel3D) as GLTFResult;
     const ref = useRef<Mesh>(null);
     const lightRef = useRef<RectAreaLight>(null);
     const [size, setSize] = useState<Vector3>(new Vector3());
     const [videoId, setVideoId] = useState<string | undefined>();
     const [showYoutubeVideo, setShowYoutubeVideo] = useState(false);
-    const [thumnailURL, setThumnailURL] = useState<string>();
-    console.log(thumbnails?.[0], "thumbnails?.[0]");
-
-    // const texture = useTexture(`https://cors-anywhere.herokuapp.com/${thumbnails?.[0]}` || "");
-    const texture = useTexture(
-        `https://cors-anywhere.herokuapp.com/https://i.ytimg.com/vi/yhB3BgJyGl8/hqdefault.jpg` || ""
-    );
-    // texture.flipY = false;
-    // texture.rotation = 1;
-    // const envMap = useCubeTexture(["0.jpg"], { path: "https://i.ytimg.com/vi/yhB3BgJyGl8/" });
-    // const thumbnail = `https://i.ytimg.com/vi/yhB3BgJyGl8/0.jpg`
-    // console.log(envMap, "envMap");
+    const { canDisplayThumbnails } = useCinema();
 
     useHelper(lightRef as unknown as MutableRefObject<Object3D<Event>>, RectAreaLightHelper);
 
@@ -81,7 +71,6 @@ const CinemaChunk: FC<CinemaChunkProps> = ({ cinemaModel3D, index, videoUrl, thu
 
     useEffect(() => {
         const youtubeVideoId = extractVideoIdFromUrl(videoUrl);
-        setThumnailURL(`https://i.ytimg.com/vi/${youtubeVideoId}/`);
         setVideoId(youtubeVideoId);
     }, [videoId, videoUrl]);
 
@@ -280,14 +269,24 @@ const CinemaChunk: FC<CinemaChunkProps> = ({ cinemaModel3D, index, videoUrl, thu
 
                     <mesh
                         geometry={nodes.Cube001.geometry}
-                        // material={materials["black concrete"]}
-                        position={[3.354, 3.827, -9.275]}
-                        rotation={[Math.PI / 2, 0, 0]}
-                        scale={[1, 2, 4]}
+                        material={materials["black concrete"]}
+                        position={[3.5, 3.827, -8]}
+                        scale={[1.7, 1.5, 1.5]}
                     >
-                        <meshStandardMaterial map={texture} side={DoubleSide} />
+                        {canDisplayThumbnails && (
+                            <Html
+                                occlude
+                                distanceFactor={1}
+                                transform
+                                position={[-0.085, 0, 0]}
+                                rotation={[0, -Math.PI / 2, 0]}
+                                scale={[0.9, 1, 1]}
+                            >
+                                <img src={`https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`} />
+                            </Html>
+                        )}
                     </mesh>
-                    {/* <mesh
+                    <mesh
                         geometry={nodes.Neon.geometry}
                         // material={materials.Neon}
                         position={[-3.619, 7.289, -0.006]}
@@ -314,7 +313,7 @@ const CinemaChunk: FC<CinemaChunkProps> = ({ cinemaModel3D, index, videoUrl, thu
                             emissiveIntensity={10}
                             toneMapped={false}
                         />
-                    </mesh> */}
+                    </mesh>
                 </group>
             </Suspense>
         </GameRigidBody>
