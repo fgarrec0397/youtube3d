@@ -20,7 +20,7 @@ import {
 } from "@granity/three";
 import { PointerLockControls } from "@granity/three/drei";
 import { useLoader } from "@granity/three/fiber";
-import { FC, Ref, useEffect, useRef, useState } from "react";
+import { FC, Ref, useCallback, useEffect, useRef, useState } from "react";
 import { PointerLockControls as PointerLockControlsImpl } from "three-stdlib";
 
 import useGameManager from "../GameManager/_actions/hooks/useGameManager";
@@ -95,7 +95,7 @@ const Player: FC<PlayerProps> = ({ position, rotation, walkSoundEffect }, ref) =
         }
     }, [position, previousVideosLinks, rotation, videosLinks]);
 
-    const playWalkSound = () => {
+    const playWalkSound = useCallback(() => {
         if (!walkSoundEffectRef.current) {
             return;
         }
@@ -106,7 +106,7 @@ const Player: FC<PlayerProps> = ({ position, rotation, walkSoundEffect }, ref) =
             walkSoundEffectRef.current.setLoop(true);
             walkSoundEffectRef.current.play();
         }
-    };
+    }, [buffer]);
 
     const stopWalkSound = () => {
         if (!walkSoundEffectRef.current) {
@@ -118,6 +118,26 @@ const Player: FC<PlayerProps> = ({ position, rotation, walkSoundEffect }, ref) =
         }
     };
 
+    useEffect(() => {
+        if (
+            movementDirection.backward +
+                movementDirection.forward +
+                movementDirection.right +
+                movementDirection.left >
+            0
+        ) {
+            return playWalkSound();
+        }
+
+        stopWalkSound();
+    }, [
+        movementDirection.backward,
+        movementDirection.forward,
+        movementDirection.left,
+        movementDirection.right,
+        playWalkSound,
+    ]);
+
     useInputs((input) => {
         if (!canPlayerMove) {
             return;
@@ -125,42 +145,34 @@ const Player: FC<PlayerProps> = ({ position, rotation, walkSoundEffect }, ref) =
 
         if (input.forwardDown) {
             updateDirection("forward", 1);
-            playWalkSound();
         }
 
         if (input.forwardUp) {
             updateDirection("forward", 0);
-            stopWalkSound();
         }
 
         if (input.rightDown) {
             updateDirection("right", 1);
-            playWalkSound();
         }
 
         if (input.rightUp) {
             updateDirection("right", 0);
-            stopWalkSound();
         }
 
         if (input.backwardDown) {
             updateDirection("backward", 1);
-            playWalkSound();
         }
 
         if (input.backwardUp) {
             updateDirection("backward", 0);
-            stopWalkSound();
         }
 
         if (input.leftDown) {
             updateDirection("left", 1);
-            playWalkSound();
         }
 
         if (input.leftUp) {
             updateDirection("left", 0);
-            stopWalkSound();
         }
 
         if (input.jump) {
