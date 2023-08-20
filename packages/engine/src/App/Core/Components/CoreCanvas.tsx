@@ -5,7 +5,7 @@ import { Effects, useContextBridge } from "@granity/three/drei";
 import { Canvas, extend, Object3DNode } from "@granity/three/fiber";
 import { pxToRem, useTheme } from "@granity/ui";
 import { Context, FC } from "react";
-import { GLTF, RectAreaLightHelper, UnrealBloomPass } from "three-stdlib";
+import { UnrealBloomPass } from "three-stdlib";
 
 type Props = {
     contexts: Context<any>[];

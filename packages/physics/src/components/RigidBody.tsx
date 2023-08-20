@@ -1,5 +1,4 @@
 import { HasChildren } from "@granity/helpers";
-// import { RigidBodyApi } from "@react-three/rapier";
 import { forwardRef } from "react";
 
 import {

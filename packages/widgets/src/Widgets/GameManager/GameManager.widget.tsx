@@ -1,9 +1,13 @@
 import { createGameWidget } from "@granity/engine";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 
 import widgetStarterReducer from "./_actions/_data/state/gameManagerReducer";
 
 const GameManager: FC = () => {
+    useEffect(() => {
+        console.log("game manager");
+    }, []);
+
     return null;
 };
 

@@ -1,5 +1,6 @@
 import { createUI, useInputs } from "@granity/engine";
 import DeleteIcon from "@granity/icons/Delete";
+import { Loader } from "@granity/three/drei";
 import {
     Box,
     BoxProps,
@@ -217,35 +218,38 @@ const VideosLinksUI: FC = () => {
     };
 
     return (
-        <Dialog open={isDialogOpen}>
-            <DialogTitle {...styles.dialogTitle}>Add your videos</DialogTitle>
-            <DialogContent {...styles.dialogContent}>
-                {fields.map((x, index) => (
-                    <Box key={x.id} {...styles.rowWrapper}>
-                        <TextField
-                            label="Add your video link here"
-                            value={x.value}
-                            onChange={(event) => updateRow(event, index)}
-                            {...styles.textField}
-                        />
-                        <IconButton onClick={() => deleteRow(x.id)} {...styles.deleteButton}>
-                            <DeleteIcon color="error" />
-                        </IconButton>
-                    </Box>
-                ))}
-                <Button onClick={addRow} {...styles.textButton}>
-                    Add a row
-                </Button>
-            </DialogContent>
-            <DialogActions {...styles.dialogActions}>
-                <Button onClick={confirm} {...styles.filledButton}>
-                    Confirm
-                </Button>
-                <Button onClick={cancel} {...styles.outlinedButton}>
-                    Cancel
-                </Button>
-            </DialogActions>
-        </Dialog>
+        <>
+            <Loader />
+            <Dialog open={isDialogOpen}>
+                <DialogTitle {...styles.dialogTitle}>Add your videos</DialogTitle>
+                <DialogContent {...styles.dialogContent}>
+                    {fields.map((x, index) => (
+                        <Box key={x.id} {...styles.rowWrapper}>
+                            <TextField
+                                label="Add your video link here"
+                                value={x.value}
+                                onChange={(event) => updateRow(event, index)}
+                                {...styles.textField}
+                            />
+                            <IconButton onClick={() => deleteRow(x.id)} {...styles.deleteButton}>
+                                <DeleteIcon color="error" />
+                            </IconButton>
+                        </Box>
+                    ))}
+                    <Button onClick={addRow} {...styles.textButton}>
+                        Add a row
+                    </Button>
+                </DialogContent>
+                <DialogActions {...styles.dialogActions}>
+                    <Button onClick={confirm} {...styles.filledButton}>
+                        Confirm
+                    </Button>
+                    <Button onClick={cancel} {...styles.outlinedButton}>
+                        Cancel
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </>
     );
 };
 
