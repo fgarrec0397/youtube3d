@@ -4,7 +4,7 @@ import { useCallback } from "react";
 import useGameService from "../_data/hooks/useGameService";
 
 export default () => {
-    const { updateIsGamePaused } = useGameService();
+    const { updateIsGamePaused, updateIsGameReady, isGameReady } = useGameService();
 
     const { setGamePreviewStatus } = useEditor();
 
@@ -27,5 +27,7 @@ export default () => {
         runGamePreview,
         pauseGame,
         playGame,
+        updateIsGameReady,
+        isGameReady,
     };
 };

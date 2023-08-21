@@ -4,10 +4,10 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
     enabled: process.env.ANALYZE === "true",
 });
 
-const withPWA = require("@granity/next-pwa")({
-    dest: "public",
-    buildExcludes: [/app-build-manifest\.json/],
-});
+// const withPWA = require("@granity/next-pwa")({
+//     dest: "public",
+//     buildExcludes: [/app-build-manifest\.json/],
+// });
 
 const nextConfig = {
     reactStrictMode: true,
@@ -40,4 +40,4 @@ const nextConfig = {
     },
 };
 
-module.exports = withBundleAnalyzer(withPWA(nextConfig));
+module.exports = withBundleAnalyzer(nextConfig);

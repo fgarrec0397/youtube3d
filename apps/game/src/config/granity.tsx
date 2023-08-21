@@ -14,6 +14,7 @@ importWidgetsModules(
 
 export const granityConfig: EngineConfig = {
     widgetsModules,
+    physicsEnabled: true,
     endpoints: {
         app: {
             get: "/server/app",

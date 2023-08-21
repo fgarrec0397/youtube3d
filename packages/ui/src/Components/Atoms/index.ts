@@ -24,6 +24,7 @@ export * from "./MenuList";
 export * from "./Modal";
 export * from "./Paper";
 export * from "./Select";
+export * from "./Skeleton";
 export * from "./Stepper";
 export * from "./TextField";
 export * from "./Tooltip";
