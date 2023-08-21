@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { useDispatch } from "react-redux";
 
-import { setIsGamePaused } from "../state/gameReducer";
+import { setIsGamePaused, setIsGameReady } from "../state/gameReducer";
 
 export default () => {
     const dispatch = useDispatch();
@@ -13,7 +13,15 @@ export default () => {
         [dispatch]
     );
 
+    const dispatchSetIsGameReady = useCallback(
+        (value: boolean) => {
+            dispatch(setIsGameReady(value));
+        },
+        [dispatch]
+    );
+
     return {
         dispatchSetIsGamePaused,
+        dispatchSetIsGameReady,
     };
 };

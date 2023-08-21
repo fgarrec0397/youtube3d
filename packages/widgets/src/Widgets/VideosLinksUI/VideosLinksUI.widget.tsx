@@ -1,6 +1,5 @@
 import { createUI, useInputs } from "@granity/engine";
 import DeleteIcon from "@granity/icons/Delete";
-import { Loader } from "@granity/three/drei";
 import {
     Box,
     BoxProps,
@@ -219,7 +218,6 @@ const VideosLinksUI: FC = () => {
 
     return (
         <>
-            <Loader />
             <Dialog open={isDialogOpen}>
                 <DialogTitle {...styles.dialogTitle}>Add your videos</DialogTitle>
                 <DialogContent {...styles.dialogContent}>

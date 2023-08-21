@@ -18,6 +18,10 @@ export default () => {
     });
 
     useEffect(() => {
+        console.log(status, "status");
+    }, [status]);
+
+    useEffect(() => {
         updateStatus(status);
 
         if (status === "error") {

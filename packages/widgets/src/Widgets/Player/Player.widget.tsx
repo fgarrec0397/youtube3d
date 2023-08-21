@@ -75,9 +75,9 @@ const Player: FC<PlayerProps> = ({ position, rotation, walkSoundEffect }, ref) =
         if (pointerLockEnable) {
             setIsEnabled(true);
 
-            setTimeout(() => {
-                pointerLockRef?.lock();
-            }, 10);
+            // setTimeout(() => {
+            //     pointerLockRef?.lock();
+            // }, 10);
         }
     }, [pointerLockEnable, pointerLockRef]);
 
