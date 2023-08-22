@@ -4,7 +4,7 @@ import canvasConfig from "@engine/App/Core/configs/canvas";
 import { Effects, useContextBridge } from "@granity/three/drei";
 import { Canvas, extend, Object3DNode } from "@granity/three/fiber";
 import { Skeleton, useTheme } from "@granity/ui";
-import { Context, FC, useEffect } from "react";
+import { Context, FC } from "react";
 import { UnrealBloomPass } from "three-stdlib";
 
 import GameScene from "./GameScene";
@@ -26,10 +26,6 @@ const GameCanvas: FC<Props> = ({ contexts }) => {
     const ContextBridge = useContextBridge(...contexts);
     const { widgetsIds } = useWidgets();
     const { appStatus } = useCore();
-
-    useEffect(() => {
-        console.log({ widgetsIds, appStatus });
-    }, [appStatus, widgetsIds]);
 
     if (appStatus === "loading" || widgetsIds.length === 0) {
         return (
