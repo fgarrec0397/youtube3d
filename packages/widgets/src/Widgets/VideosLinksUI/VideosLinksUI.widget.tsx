@@ -239,7 +239,7 @@ const VideosLinksUI: FC = () => {
             </DialogContent>
             <DialogActions {...styles.dialogActions}>
                 <Button onClick={confirm} {...styles.filledButton}>
-                    Confirm
+                    Save
                 </Button>
                 <Button onClick={cancel} {...styles.outlinedButton}>
                     Cancel
