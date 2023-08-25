@@ -63,11 +63,23 @@ const CinemaChunk: FC<CinemaChunkProps> = ({ cinemaModel3D, index, videoUrl }) =
     const [showYoutubeVideo, setShowYoutubeVideo] = useState(false);
     const { canDisplayThumbnails } = useCinema();
 
-    useHelper(lightRef as unknown as MutableRefObject<Object3D<Event>>, RectAreaLightHelper);
-
     const isOdd = useMemo(() => {
         return index % 2 !== 0;
     }, [index]);
+
+    const offsetPositionCalculator = useMemo(() => {
+        if (index === 0 || index === 1) {
+            return 0;
+        }
+
+        if (isOdd) {
+            return (index - 1) / 2;
+        }
+
+        return index / 2;
+    }, [index, isOdd]);
+
+    useHelper(lightRef as unknown as MutableRefObject<Object3D<Event>>, RectAreaLightHelper);
 
     useEffect(() => {
         const youtubeVideoId = extractVideoIdFromUrl(videoUrl);
@@ -89,7 +101,7 @@ const CinemaChunk: FC<CinemaChunkProps> = ({ cinemaModel3D, index, videoUrl }) =
         <GameRigidBody
             type="fixed"
             colliders={false}
-            position={[!isOdd ? -0.28 : 0, 0, index * size.z - 0.1]}
+            position={[!isOdd ? -0.28 : 0, 0, offsetPositionCalculator * size.z - 0.1]}
             rotation={[0, isOdd ? 0 : Math.PI, 0]}
         >
             <Suspense>
@@ -102,7 +114,7 @@ const CinemaChunk: FC<CinemaChunkProps> = ({ cinemaModel3D, index, videoUrl }) =
                         position={[0, 7.3, 0]}
                         rotation={[-Math.PI / 2, 0, 0]}
                     />
-                    <MeshCollider type="cuboid">
+                    {/* <MeshCollider type="cuboid">
                         <mesh
                             geometry={nodes.Cube012.geometry}
                             material={materials["Marble.004"]}
@@ -110,7 +122,7 @@ const CinemaChunk: FC<CinemaChunkProps> = ({ cinemaModel3D, index, videoUrl }) =
                             rotation={[Math.PI / 2, -Math.PI / 2, 0]}
                             scale={[1, 1, 40.262]}
                         />
-                    </MeshCollider>
+                    </MeshCollider> */}
                     {isOdd && (
                         <>
                             <MeshCollider type="cuboid">
@@ -142,15 +154,11 @@ const CinemaChunk: FC<CinemaChunkProps> = ({ cinemaModel3D, index, videoUrl }) =
                                 setShowYoutubeVideo(true);
                             }
                         }}
-                    >
-                        {/* <mesh geometry={nodes.collision_enter.geometry} scale={[1, 4.581, 3.845]}>
-                            <meshStandardMaterial color="blue" />
-                        </mesh> */}
-                    </CuboidCollider>
+                    />
                     <CuboidCollider
                         args={[1, 4.581, 3.845]}
-                        position={[31.1, 4.273, -12.792]}
-                        rotation={[-Math.PI, 0, -Math.PI]}
+                        position={[18.952, 0.36, -12.94]}
+                        scale={[13.404, 0.375, 3.691]}
                         name="video-trigger"
                         sensor
                         onIntersectionEnter={({ other }) => {
@@ -158,16 +166,12 @@ const CinemaChunk: FC<CinemaChunkProps> = ({ cinemaModel3D, index, videoUrl }) =
                                 setShowYoutubeVideo(false);
                             }
                         }}
-                    >
-                        {/* <mesh geometry={nodes.collision_enter.geometry} scale={[1, 4.581, 3.845]}>
-                            <meshStandardMaterial color="red" />
-                        </mesh> */}
-                    </CuboidCollider>
+                    />
                     <MeshCollider type="trimesh">
                         <mesh
                             geometry={nodes.Cube.geometry}
                             material={materials.Marble}
-                            position={[21.836, 8.459, -6.753]}
+                            position={[21.836, 8, -6.753]}
                         />
                     </MeshCollider>
                     <MeshCollider type="cuboid">
@@ -215,12 +219,6 @@ const CinemaChunk: FC<CinemaChunkProps> = ({ cinemaModel3D, index, videoUrl }) =
                         args={[24.003, 16.641, 0.03]}
                         position={[27.722, -0.0001, 0]}
                         rotation={[-Math.PI / 2, 0, 0]}
-                        name="room-floor"
-                        onCollisionExit={({ other }) => {
-                            if (other.rigidBodyObject?.name === "player") {
-                                setShowYoutubeVideo(false);
-                            }
-                        }}
                     >
                         <mesh
                             geometry={nodes.Cube007.geometry}
@@ -230,27 +228,33 @@ const CinemaChunk: FC<CinemaChunkProps> = ({ cinemaModel3D, index, videoUrl }) =
                             receiveShadow
                         />
                     </CuboidCollider>
-                    <mesh
-                        geometry={nodes.Cube008.geometry}
-                        material={materials.Marble}
-                        position={[27.69, 9.187, -16.527]}
-                        rotation={[Math.PI, 0, Math.PI / 2]}
-                        scale={[9.368, 23.816, 0.03]}
-                    />
-                    <mesh
-                        geometry={nodes.Cube009.geometry}
-                        material={materials.Marble}
-                        position={[27.557, 9.328, 16.619]}
-                        rotation={[Math.PI, 0, Math.PI / 2]}
-                        scale={[9.368, 23.816, 0.03]}
-                    />
-                    <mesh
-                        geometry={nodes.Cube010.geometry}
-                        material={materials["Plain black"]}
-                        position={[27.722, 18.701, 0.164]}
-                        rotation={[Math.PI / 2, 0, -Math.PI]}
-                        scale={[-1, -1, -10.203]}
-                    />
+                    <MeshCollider type="cuboid">
+                        <mesh
+                            geometry={nodes.Cube008.geometry}
+                            material={materials.Marble}
+                            position={[27.69, 9.187, -16.527]}
+                            rotation={[Math.PI, 0, Math.PI / 2]}
+                            scale={[9.368, 23.816, 0.03]}
+                        />
+                    </MeshCollider>
+                    <MeshCollider type="cuboid">
+                        <mesh
+                            geometry={nodes.Cube009.geometry}
+                            material={materials.Marble}
+                            position={[27.557, 9.328, 16.619]}
+                            rotation={[Math.PI, 0, Math.PI / 2]}
+                            scale={[9.368, 23.816, 0.03]}
+                        />
+                    </MeshCollider>
+                    <MeshCollider type="cuboid">
+                        <mesh
+                            geometry={nodes.Cube010.geometry}
+                            material={materials["Plain black"]}
+                            position={[27.722, 18.701, 0.164]}
+                            rotation={[Math.PI / 2, 0, -Math.PI]}
+                            scale={[-1, -1, -10.203]}
+                        />
+                    </MeshCollider>
                     <MeshCollider type="trimesh">
                         <mesh
                             geometry={nodes.stairs.geometry}

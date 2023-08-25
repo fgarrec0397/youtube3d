@@ -18,7 +18,7 @@ import {
     PositionalAudio,
     Vector3,
 } from "@granity/three";
-import { PointerLockControls } from "@granity/three/drei";
+import { PointerLockControlsOverride } from "@granity/three/drei";
 import { useLoader } from "@granity/three/fiber";
 import { FC, Ref, useCallback, useEffect, useRef, useState } from "react";
 import { PointerLockControls as PointerLockControlsImpl } from "three-stdlib";
@@ -232,7 +232,7 @@ const Player: FC<PlayerProps> = ({ position, rotation, walkSoundEffect }, ref) =
                 <perspectiveCamera ref={cameraRef as Ref<PerspectiveCamera>} position={[0, 5, 0]} />
 
                 {isEnabled && (
-                    <PointerLockControls
+                    <PointerLockControlsOverride
                         ref={setPointerLockRef}
                         enabled={isGame || isGamePreview}
                         camera={camera}

@@ -19,7 +19,10 @@ export type PointerLockControlsProps = ReactThreeFiber.Object3DNode<
     makeDefault?: boolean;
 };
 
-export const PointerLockControls = forwardRef<PointerLockControlsImpl, PointerLockControlsProps>(
+export const PointerLockControlsOverride = forwardRef<
+    PointerLockControlsImpl,
+    PointerLockControlsProps
+>(
     (
         { domElement, selector, onChange, onLock, onUnlock, enabled = true, makeDefault, ...props },
         ref
@@ -100,4 +103,4 @@ export const PointerLockControls = forwardRef<PointerLockControlsImpl, PointerLo
     }
 );
 
-PointerLockControls.displayName = "PointerLockControls";
+PointerLockControlsOverride.displayName = "PointerLockControls";
