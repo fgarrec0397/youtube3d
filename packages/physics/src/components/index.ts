@@ -8,3 +8,4 @@ export type { PhysicsProps } from "./Physics";
 export { default as Physics } from "./Physics";
 export type { RigidBodyProps, RigidBodyRefType } from "./RigidBody";
 export { default as RigidBody } from "./RigidBody";
+export { RapierCollider } from "@react-three/rapier";
