@@ -5,10 +5,10 @@ import {
     GameRigidBody,
 } from "@granity/engine";
 import { CuboidCollider, MeshCollider, RapierCollider, RigidBodyRefType } from "@granity/physics";
-import { useAnimations, useGLTF } from "@granity/three/drei";
-import { FC, useCallback, useEffect, useRef, useState } from "react";
-import { Group, LoopOnce, Mesh, Object3D } from "three";
-import { GLTF } from "three-stdlib";
+import { useAnimations, useGLTF, useHelper } from "@granity/three/drei";
+import { FC, MutableRefObject, useCallback, useEffect, useRef, useState } from "react";
+import { Group, LoopOnce, Mesh, Object3D, RectAreaLight } from "three";
+import { GLTF, RectAreaLightHelper } from "three-stdlib";
 
 export type HubProps = GameEditableWidget & {
     model3D: string;
@@ -19,25 +19,86 @@ type GLTFResult = GLTF & {
         Cube014: THREE.Mesh;
         Cube015: THREE.Mesh;
         Cube016: THREE.Mesh;
+        Mesh: THREE.Mesh;
+        Mesh_1: THREE.Mesh;
+        Cylinder: THREE.Mesh;
         Cube017: THREE.Mesh;
+        Cube059: THREE.Mesh;
+        Cube059_1: THREE.Mesh;
+        Cube019: THREE.Mesh;
+        Cube020: THREE.Mesh;
+        Cube007: THREE.Mesh;
+        Cube007_1: THREE.Mesh;
+        Cube022: THREE.Mesh;
+        Cube023: THREE.Mesh;
+        Cube024: THREE.Mesh;
+        Neon002: THREE.Mesh;
+        Neon003: THREE.Mesh;
+        Cube025: THREE.Mesh;
+        Cube026: THREE.Mesh;
+        Cube027: THREE.Mesh;
+        Cube028: THREE.Mesh;
+        Cube029: THREE.Mesh;
+        Cube030: THREE.Mesh;
+        Cube031: THREE.Mesh;
+        Cube032: THREE.Mesh;
+        Cube033: THREE.Mesh;
+        Cube034: THREE.Mesh;
+        Cube035: THREE.Mesh;
     };
     materials: {
         ["Marble.010"]: THREE.MeshStandardMaterial;
         ["Marble.011"]: THREE.MeshStandardMaterial;
         ["Marble.012"]: THREE.MeshStandardMaterial;
+        ["01 - Default"]: THREE.MeshStandardMaterial;
+        Marble: THREE.MeshStandardMaterial;
+        ["Material.002"]: THREE.MeshStandardMaterial;
+        ["Glowing red"]: THREE.MeshStandardMaterial;
+        ["Marble.003"]: THREE.MeshStandardMaterial;
+        ["Marble.013"]: THREE.MeshStandardMaterial;
+        ["Glowing red.001"]: THREE.MeshStandardMaterial;
+        ["Marble.014"]: THREE.MeshStandardMaterial;
+        ["Marble.015"]: THREE.MeshStandardMaterial;
+        ["Neon.002"]: THREE.MeshStandardMaterial;
+        ["Neon.003"]: THREE.MeshStandardMaterial;
+        ["Marble.016"]: THREE.MeshStandardMaterial;
+        ["Plain.001"]: THREE.MeshStandardMaterial;
+        ["Marble.017"]: THREE.MeshStandardMaterial;
+        ["Marble.018"]: THREE.MeshStandardMaterial;
+        ["black concrete.001"]: THREE.MeshStandardMaterial;
+        ["black concrete.009"]: THREE.MeshStandardMaterial;
+        ["black concrete.010"]: THREE.MeshStandardMaterial;
+        ["black concrete.011"]: THREE.MeshStandardMaterial;
+        ["black concrete.012"]: THREE.MeshStandardMaterial;
+        ["black concrete.013"]: THREE.MeshStandardMaterial;
+        ["Marble.019"]: THREE.MeshStandardMaterial;
     };
 };
 
 const Hub: FC<HubProps> = ({ model3D }) => {
     const group = useRef<Group>(null);
+    const doorRef = useRef<Object3D>();
+    const cylinderRef = useRef<Object3D>();
     const spotlightRef = useRef<Object3D>();
     const spotlightRef2 = useRef<Object3D>();
+    const rectAreaLightRef = useRef<RectAreaLight>(null);
+    const rectAreaLightRef2 = useRef<RectAreaLight>(null);
     const doorColliderRef = useRef<RapierCollider>(null);
     const { nodes, materials, animations } = useGLTF(model3D) as GLTFResult;
     const { actions, mixer } = useAnimations(animations, group);
     const [isDoorOpen, setIsDoorOpen] = useState(false);
 
     const doorAnimation = actions.DoorAction;
+
+    useHelper(
+        rectAreaLightRef as unknown as MutableRefObject<Object3D<Event>>,
+        RectAreaLightHelper
+    );
+
+    useHelper(
+        rectAreaLightRef2 as unknown as MutableRefObject<Object3D<Event>>,
+        RectAreaLightHelper
+    );
 
     useEffect(() => {
         const finishedCallback = () => {
@@ -114,6 +175,48 @@ const Hub: FC<HubProps> = ({ model3D }) => {
             >
                 <mesh ref={spotlightRef} position={[0, 0, 10]} />
             </spotLight>
+            <spotLight
+                name="Point004_1"
+                intensity={1}
+                angle={0.487}
+                penumbra={1}
+                decay={2}
+                distance={40}
+                position={[0.615, 15.617, 65.369 - 13.859]}
+                rotation={[-1.586, 0.007, 1.28]}
+                target={cylinderRef.current}
+            >
+                <group position={[0, 0, -1]} />
+            </spotLight>
+            <spotLight
+                name="Point005_1"
+                intensity={1}
+                angle={1}
+                penumbra={1}
+                decay={2}
+                distance={40}
+                position={[0.615, 15.617, 65.369 - 13.859 - 20]}
+                rotation={[-1.586, 0.007, 1.28]}
+                target={doorRef.current}
+            >
+                <group position={[0, 0, -1]} />
+            </spotLight>
+            <rectAreaLight
+                ref={rectAreaLightRef2}
+                width={15}
+                height={5}
+                intensity={5}
+                position={[-24.029, 8.43, 36.2 - 13.859]}
+                rotation={[-Math.PI / 2, 0, 0]}
+            />
+            <rectAreaLight
+                ref={rectAreaLightRef}
+                width={15}
+                height={5}
+                intensity={5}
+                position={[19.306, 8.43, 36.2 - 13.859]}
+                rotation={[-Math.PI / 2, 0, 0]}
+            />
             <GameRigidBody type="fixed" colliders={false}>
                 <group ref={group}>
                     <group name="Scene">
@@ -162,9 +265,13 @@ const Hub: FC<HubProps> = ({ model3D }) => {
                             <mesh
                                 name="Mesh"
                                 geometry={nodes.Mesh.geometry}
-                                material={materials["01 - Default"]}
-                            />
+                                // material={materials["01 - Default"]}
+                            >
+                                <meshStandardMaterial {...materials["01 - Default"]} />
+                                {/* <meshBasicMaterial mat/> */}
+                            </mesh>
                             <mesh
+                                ref={doorRef.current}
                                 name="Mesh_1"
                                 geometry={nodes.Mesh_1.geometry}
                                 material={materials.Marble}
@@ -179,6 +286,7 @@ const Hub: FC<HubProps> = ({ model3D }) => {
                     /> */}
                         <MeshCollider type="trimesh">
                             <mesh
+                                ref={cylinderRef}
                                 name="Cylinder"
                                 geometry={nodes.Cylinder.geometry}
                                 material={materials["Material.002"]}
@@ -206,14 +314,14 @@ const Hub: FC<HubProps> = ({ model3D }) => {
                                 material={materials.Marble}
                             />
                         </group>
-                        {/* <mesh
+                        <mesh
                             name="Cube019"
                             geometry={nodes.Cube019.geometry}
                             material={materials["Marble.003"]}
                             position={[0.413, 19.004, 38.517]}
                             rotation={[-Math.PI / 2, 0, -Math.PI / 2]}
                             scale={[-21.804, -37.699, -0.339]}
-                        /> */}
+                        />
                         <mesh
                             name="Cube020"
                             geometry={nodes.Cube020.geometry}
@@ -282,38 +390,46 @@ const Hub: FC<HubProps> = ({ model3D }) => {
                             rotation={[-Math.PI / 2, 0, -Math.PI]}
                             scale={[-0.066, -5.961, -0.065]}
                         />
-                        <mesh
-                            name="Cube025"
-                            geometry={nodes.Cube025.geometry}
-                            material={materials["Marble.016"]}
-                            position={[-4.896, 3.708, 24.859 - 13.859]}
-                            rotation={[Math.PI / 2, -Math.PI / 2, 0]}
-                            scale={[1, 0.36, 40.262]}
-                        />
-                        <mesh
-                            name="Cube026"
-                            geometry={nodes.Cube026.geometry}
-                            material={materials["Plain.001"]}
-                            position={[0, 7.377, 24.859 - 13.859]}
-                            rotation={[Math.PI / 2, 0, 0]}
-                            scale={[1, 0.36, 1]}
-                        />
-                        <mesh
-                            name="Cube027"
-                            geometry={nodes.Cube027.geometry}
-                            material={materials["Marble.017"]}
-                            position={[-0.304, 0, 24.859 - 13.859]}
-                            rotation={[Math.PI / 2, 0, 0]}
-                            scale={[1, 0.36, 1]}
-                        />
-                        <mesh
-                            name="Cube028"
-                            geometry={nodes.Cube028.geometry}
-                            material={materials["Marble.018"]}
-                            position={[4.616, 3.708, 24.859 - 13.859]}
-                            rotation={[Math.PI / 2, -Math.PI / 2, 0]}
-                            scale={[1, 0.36, 40.262]}
-                        />
+                        <MeshCollider type="cuboid">
+                            <mesh
+                                name="Cube025"
+                                geometry={nodes.Cube025.geometry}
+                                material={materials["Marble.016"]}
+                                position={[-4.896, 3.708, 24.859 - 13.859]}
+                                rotation={[Math.PI / 2, -Math.PI / 2, 0]}
+                                scale={[1, 0.36, 40.262]}
+                            />
+                        </MeshCollider>
+                        <MeshCollider type="cuboid">
+                            <mesh
+                                name="Cube026"
+                                geometry={nodes.Cube026.geometry}
+                                material={materials["Plain.001"]}
+                                position={[0, 7.377, 24.859 - 13.859]}
+                                rotation={[Math.PI / 2, 0, 0]}
+                                scale={[1, 0.36, 1]}
+                            />
+                        </MeshCollider>
+                        <MeshCollider type="cuboid">
+                            <mesh
+                                name="Cube027"
+                                geometry={nodes.Cube027.geometry}
+                                material={materials["Marble.017"]}
+                                position={[-0.304, 0, 24.859 - 13.859]}
+                                rotation={[Math.PI / 2, 0, 0]}
+                                scale={[1, 0.36, 1]}
+                            />
+                        </MeshCollider>
+                        <MeshCollider type="cuboid">
+                            <mesh
+                                name="Cube028"
+                                geometry={nodes.Cube028.geometry}
+                                material={materials["Marble.018"]}
+                                position={[4.616, 3.708, 24.859 - 13.859]}
+                                rotation={[Math.PI / 2, -Math.PI / 2, 0]}
+                                scale={[1, 0.36, 40.262]}
+                            />
+                        </MeshCollider>
                         <mesh
                             name="Cube029"
                             geometry={nodes.Cube029.geometry}

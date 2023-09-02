@@ -41,7 +41,12 @@ const Cinema: FC<CinemaProps> = ({ model3D, ambiantSoundEffect }) => {
             <fog attach="fog" color="#ffffff" near={1} far={2} />
             <positionalAudio ref={ambiantSoundEffectRef} args={[listener]} />
             {videos?.map((x, index) => (
-                <CinemaChunk key={x} videoUrl={x} index={index} cinemaModel3D={model3D} />
+                <CinemaChunk
+                    key={`${x}-${index}`}
+                    videoUrl={x}
+                    index={index}
+                    cinemaModel3D={model3D}
+                />
             ))}
         </>
     );
