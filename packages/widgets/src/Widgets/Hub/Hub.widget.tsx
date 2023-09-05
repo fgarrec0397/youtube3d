@@ -79,6 +79,7 @@ const Hub: FC<HubProps> = ({ model3D }) => {
     const group = useRef<Group>(null);
     const doorRef = useRef<Object3D>();
     const cylinderRef = useRef<Object3D>();
+    const buttonRef = useRef<Object3D>();
     const spotlightRef = useRef<Object3D>();
     const spotlightRef2 = useRef<Object3D>();
     const rectAreaLightRef = useRef<RectAreaLight>(null);
@@ -125,7 +126,9 @@ const Hub: FC<HubProps> = ({ model3D }) => {
     }, [doorAnimation]);
 
     useEffect(() => {
-        openDoor();
+        setTimeout(() => {
+            openDoor();
+        }, 10000);
     }, [doorAnimation, openDoor]);
 
     return (
@@ -184,7 +187,7 @@ const Hub: FC<HubProps> = ({ model3D }) => {
                 distance={40}
                 position={[0.615, 15.617, 65.369 - 13.859]}
                 rotation={[-1.586, 0.007, 1.28]}
-                target={cylinderRef.current}
+                target={buttonRef.current}
             >
                 <group position={[0, 0, -1]} />
             </spotLight>
@@ -206,7 +209,7 @@ const Hub: FC<HubProps> = ({ model3D }) => {
                 width={15}
                 height={5}
                 intensity={5}
-                position={[-24.029, 8.43, 36.2 - 13.859]}
+                position={[-22.029, 8.43, 36.2 - 13.859]}
                 rotation={[-Math.PI / 2, 0, 0]}
             />
             <rectAreaLight
@@ -214,7 +217,7 @@ const Hub: FC<HubProps> = ({ model3D }) => {
                 width={15}
                 height={5}
                 intensity={5}
-                position={[19.306, 8.43, 36.2 - 13.859]}
+                position={[21.306, 8.43, 36.2 - 13.859]}
                 rotation={[-Math.PI / 2, 0, 0]}
             />
             <GameRigidBody type="fixed" colliders={false}>
@@ -230,7 +233,7 @@ const Hub: FC<HubProps> = ({ model3D }) => {
                                 scale={[1.562, 1.289, 349.822]}
                             />
                         </MeshCollider>
-                        <MeshCollider type="cuboid">
+                        {/* <MeshCollider type="cuboid">
                             <mesh
                                 name="Cube015"
                                 geometry={nodes.Cube015.geometry}
@@ -239,7 +242,7 @@ const Hub: FC<HubProps> = ({ model3D }) => {
                                 rotation={[Math.PI, 0, Math.PI / 2]}
                                 scale={[9.368, 37.699, 0.03]}
                             />
-                        </MeshCollider>
+                        </MeshCollider> */}
                         <MeshCollider type="trimesh">
                             <mesh
                                 name="Cube016"
@@ -251,25 +254,22 @@ const Hub: FC<HubProps> = ({ model3D }) => {
                                 castShadow
                             />
                         </MeshCollider>
-                        {/* <CuboidCollider
-                        ref={doorColliderRef}
-                        args={[4.046, 3.957, 1]}
-                        position={[-0.199, 3.91, 16.544]}
-                    /> */}
+                        <CuboidCollider
+                            ref={doorColliderRef}
+                            args={[4.046, 3.957, 1]}
+                            position={[-0.199, 3.91, 16.544]}
+                        />
                         <group
                             name="Door"
-                            position={[0.407, 4.033, 17.965]}
+                            position={[0.407, 4.033, 17.602]}
                             rotation={[Math.PI / 2, 0, 0]}
-                            scale={[0.006, 0.003, 0.009]}
+                            scale={[0.0056, 0.003, 0.009]}
                         >
                             <mesh
                                 name="Mesh"
                                 geometry={nodes.Mesh.geometry}
-                                // material={materials["01 - Default"]}
-                            >
-                                <meshStandardMaterial {...materials["01 - Default"]} />
-                                {/* <meshBasicMaterial mat/> */}
-                            </mesh>
+                                material={materials["01 - Default"]}
+                            />
                             <mesh
                                 ref={doorRef.current}
                                 name="Mesh_1"
@@ -377,19 +377,31 @@ const Hub: FC<HubProps> = ({ model3D }) => {
                         <mesh
                             name="Neon002"
                             geometry={nodes.Neon002.geometry}
-                            material={materials["Neon.002"]}
                             position={[3.346, 7.289, 24.857 - 13.859]}
                             rotation={[-Math.PI / 2, 0, -Math.PI]}
                             scale={[-0.066, -5.961, -0.065]}
-                        />
+                        >
+                            <meshStandardMaterial
+                                color="#F79292"
+                                emissive="#F79292"
+                                emissiveIntensity={10}
+                                toneMapped={false}
+                            />
+                        </mesh>
                         <mesh
                             name="Neon003"
                             geometry={nodes.Neon003.geometry}
-                            material={materials["Neon.003"]}
                             position={[-3.619, 7.289, 24.857 - 13.859]}
                             rotation={[-Math.PI / 2, 0, -Math.PI]}
                             scale={[-0.066, -5.961, -0.065]}
-                        />
+                        >
+                            <meshStandardMaterial
+                                color="#F79292"
+                                emissive="#F79292"
+                                emissiveIntensity={10}
+                                toneMapped={false}
+                            />
+                        </mesh>
                         <MeshCollider type="cuboid">
                             <mesh
                                 name="Cube025"
@@ -485,6 +497,26 @@ const Hub: FC<HubProps> = ({ model3D }) => {
                             position={[21.633, 8.97, 35.821 - 13.859]}
                             scale={[1.144, 1, 1]}
                         />
+                        <mesh
+                            ref={buttonRef}
+                            name="Cube036"
+                            geometry={nodes.Cube036.geometry}
+                            material={materials.Marble}
+                            position={[0.002, 1.397, 57.146 - 13.859]}
+                        />
+                        <mesh
+                            name="Cylinder001"
+                            geometry={nodes.Cylinder001.geometry}
+                            position={[-0.383, 2.757, 56.281 - 13.859]}
+                            scale={[0.1, 0.113, 0.1]}
+                        >
+                            <meshStandardMaterial
+                                color="#7e0000"
+                                emissive="#810000"
+                                emissiveIntensity={2}
+                                toneMapped={false}
+                            />
+                        </mesh>
                     </group>
                 </group>
             </GameRigidBody>

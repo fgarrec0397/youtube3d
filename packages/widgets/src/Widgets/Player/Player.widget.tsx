@@ -229,7 +229,7 @@ const Player: FC<PlayerProps> = ({ position, rotation, walkSoundEffect }, ref) =
             >
                 <positionalAudio ref={walkSoundEffectRef} args={[listener]} />
                 {/* <PositionalAudio ref={walkSoundEffectRef} url={walkSoundEffect} distance={1} loop /> */}
-                <perspectiveCamera ref={cameraRef as Ref<PerspectiveCamera>} position={[0, 5, 0]} />
+                <perspectiveCamera ref={cameraRef as Ref<PerspectiveCamera>} position={[0, 8, 0]} />
 
                 {isEnabled && (
                     <PointerLockControlsOverride
@@ -238,7 +238,7 @@ const Player: FC<PlayerProps> = ({ position, rotation, walkSoundEffect }, ref) =
                         camera={camera}
                     />
                 )}
-                <mesh scale={[0.5, 1.5, 0.5]}>
+                <mesh scale={[0.5, 2.5, 0.5]}>
                     <capsuleGeometry />
                     <meshStandardMaterial color="white" />
                 </mesh>

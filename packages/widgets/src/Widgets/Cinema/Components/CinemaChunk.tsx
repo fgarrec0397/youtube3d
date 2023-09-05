@@ -116,8 +116,7 @@ const CinemaChunk: FC<CinemaChunkProps> = ({ cinemaModel3D, index, videoUrl }) =
                     />
                     {/* <MeshCollider type="cuboid">
                         <mesh
-                        receiveShadow
-                        castShadow
+                        
                         geometry={nodes.Cube012.geometry}
                             material={materials["Marble.004"]}
                             position={[-4.896, 3.708, 0]}
@@ -290,8 +289,6 @@ const CinemaChunk: FC<CinemaChunkProps> = ({ cinemaModel3D, index, videoUrl }) =
                         />
                     </MeshCollider>
                     <mesh
-                        receiveShadow
-                        castShadow
                         geometry={nodes.Cube003.geometry}
                         material={materials["black concrete"]}
                         position={[51.162, 10.214, 0]}
@@ -300,8 +297,6 @@ const CinemaChunk: FC<CinemaChunkProps> = ({ cinemaModel3D, index, videoUrl }) =
                     />
 
                     <mesh
-                        receiveShadow
-                        castShadow
                         geometry={nodes.Cube001.geometry}
                         material={materials["black concrete"]}
                         position={[3.5, 3.827, -8]}
@@ -312,6 +307,7 @@ const CinemaChunk: FC<CinemaChunkProps> = ({ cinemaModel3D, index, videoUrl }) =
                                 occlude
                                 distanceFactor={1}
                                 transform
+                                // position={[-1, 0, 0]}
                                 position={[-0.085, 0, 0]}
                                 rotation={[0, -Math.PI / 2, 0]}
                                 scale={[0.9, 1, 1]}
@@ -321,10 +317,7 @@ const CinemaChunk: FC<CinemaChunkProps> = ({ cinemaModel3D, index, videoUrl }) =
                         )}
                     </mesh>
                     <mesh
-                        receiveShadow
-                        castShadow
                         geometry={nodes.Neon.geometry}
-                        // material={materials.Neon}
                         position={[-3.619, 7.289, -0.006]}
                         rotation={[-Math.PI / 2, 0, -Math.PI]}
                         scale={[-0.066, -16.558, -0.065]}
@@ -337,10 +330,7 @@ const CinemaChunk: FC<CinemaChunkProps> = ({ cinemaModel3D, index, videoUrl }) =
                         />
                     </mesh>
                     <mesh
-                        receiveShadow
-                        castShadow
                         geometry={nodes.Neon001.geometry}
-                        // material={materials["Neon.001"]}
                         position={[3.346, 7.289, -0.006]}
                         rotation={[-Math.PI / 2, 0, -Math.PI]}
                         scale={[-0.066, -16.558, -0.065]}
