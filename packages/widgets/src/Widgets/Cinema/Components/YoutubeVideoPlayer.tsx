@@ -61,9 +61,11 @@ const YoutubeVideoPlayer: FC<Props> = ({ videoId, position, canVideoPlay }) => {
     if (!videoId) {
         return null;
     }
-    // occlude
+
+    console.log(canVideoPlay, "canVideoPlay");
+
     return (
-        <Html occlude distanceFactor={1} transform position={position} scale={[0.6, 0.6, 0.6]}>
+        <Html distanceFactor={1} transform position={position} scale={[0.6, 0.6, 0.6]}>
             <div
                 style={{
                     opacity: canVideoPlay ? 1 : 0,

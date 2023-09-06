@@ -238,7 +238,7 @@ const Player: FC<PlayerProps> = ({ position, rotation, walkSoundEffect }, ref) =
                         camera={camera}
                     />
                 )}
-                <mesh scale={[0.5, 2.5, 0.5]}>
+                <mesh scale={[0.5, 1.5, 0.5]}>
                     <capsuleGeometry />
                     <meshStandardMaterial color="white" />
                 </mesh>
