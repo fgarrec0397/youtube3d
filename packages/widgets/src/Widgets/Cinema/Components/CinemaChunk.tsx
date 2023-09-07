@@ -2,13 +2,13 @@ import { GameRigidBody } from "@granity/engine";
 import { Vector3Array } from "@granity/helpers";
 import { CuboidCollider, MeshCollider } from "@granity/physics";
 import { Box3, Mesh, Vector3 } from "@granity/three";
-import { Html, useGLTF, useHelper } from "@granity/three/drei";
+import { useGLTF, useHelper } from "@granity/three/drei";
 import { FC, MutableRefObject, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { MeshStandardMaterial, Object3D, RectAreaLight } from "three";
 import { GLTF, RectAreaLightHelper } from "three-stdlib";
 
-import useCinema from "../_actions/hooks/useCinema";
 import extractVideoIdFromUrl from "../_actions/utilities/extractYoutubeVideoIdFromUrl";
+import Thumbnail from "./Thumnail";
 import YoutubeVideoPlayer from "./YoutubeVideoPlayer";
 
 export type CinemaChunkProps = {
@@ -61,7 +61,6 @@ const CinemaChunk: FC<CinemaChunkProps> = ({ cinemaModel3D, index, videoUrl }) =
     const [size, setSize] = useState<Vector3>(new Vector3());
     const [videoId, setVideoId] = useState<string | undefined>();
     const [showYoutubeVideo, setShowYoutubeVideo] = useState(false);
-    const { canDisplayThumbnails } = useCinema();
 
     const isOdd = useMemo(() => {
         return index % 2 !== 0;
@@ -156,8 +155,6 @@ const CinemaChunk: FC<CinemaChunkProps> = ({ cinemaModel3D, index, videoUrl }) =
                         sensor
                         onIntersectionEnter={({ other }) => {
                             if (other.rigidBodyObject?.name === "player") {
-                                console.log("should show youtube");
-
                                 setShowYoutubeVideo(true);
                             }
                         }}
@@ -284,19 +281,7 @@ const CinemaChunk: FC<CinemaChunkProps> = ({ cinemaModel3D, index, videoUrl }) =
                         position={[3.5, 3.827, -8]}
                         scale={[1.7, 1.5, 1.5]}
                     >
-                        {canDisplayThumbnails && (
-                            <Html
-                                occlude
-                                distanceFactor={1}
-                                transform
-                                // position={[-1, 0, 0]}
-                                position={[-0.085, 0, 0]}
-                                rotation={[0, -Math.PI / 2, 0]}
-                                scale={[0.9, 1, 1]}
-                            >
-                                <img src={`https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`} />
-                            </Html>
-                        )}
+                        <Thumbnail videoId={videoId} />
                     </mesh>
                     <mesh
                         geometry={nodes.Neon.geometry}

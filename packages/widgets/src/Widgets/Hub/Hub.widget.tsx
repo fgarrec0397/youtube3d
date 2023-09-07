@@ -10,6 +10,10 @@ import { FC, MutableRefObject, useCallback, useEffect, useRef, useState } from "
 import { Group, LoopOnce, Mesh, Object3D, RectAreaLight } from "three";
 import { GLTF, RectAreaLightHelper } from "three-stdlib";
 
+import extractVideoIdFromUrl from "../Cinema/_actions/utilities/extractYoutubeVideoIdFromUrl";
+import Thumbnail from "../Cinema/Components/Thumnail";
+import useGameManager from "../GameManager/_actions/hooks/useGameManager";
+
 export type HubProps = GameEditableWidget & {
     model3D: string;
 };
@@ -88,6 +92,10 @@ const Hub: FC<HubProps> = ({ model3D }) => {
     const { nodes, materials, animations } = useGLTF(model3D) as GLTFResult;
     const { actions, mixer } = useAnimations(animations, group);
     const [isDoorOpen, setIsDoorOpen] = useState(false);
+    const { videosLinks } = useGameManager();
+    const videos = videosLinks?.length
+        ? videosLinks
+        : ["https://www.youtube.com/watch?v=fuhE6PYnRMc&t=8s&ab_channel=MrBeast"];
 
     const doorAnimation = actions.DoorAction;
 
@@ -444,12 +452,14 @@ const Hub: FC<HubProps> = ({ model3D }) => {
                         </MeshCollider>
                         <mesh
                             name="Cube029"
-                            geometry={nodes.Cube029.geometry}
-                            material={materials["black concrete.001"]}
+                            // geometry={nodes.Cube029.geometry}
+                            // material={materials["black concrete.001"]}
                             position={[-30.04, 13.285, 31.221 - 13.859]}
                             rotation={[0, Math.PI / 2, 0]}
                             scale={2.193}
-                        />
+                        >
+                            <Thumbnail videoId={extractVideoIdFromUrl(videos[0])} />
+                        </mesh>
                         <mesh
                             name="Cube030"
                             geometry={nodes.Cube030.geometry}
@@ -457,7 +467,9 @@ const Hub: FC<HubProps> = ({ model3D }) => {
                             position={[-21.492, 13.285, 31.221 - 13.859]}
                             rotation={[0, Math.PI / 2, 0]}
                             scale={2.193}
-                        />
+                        >
+                            <Thumbnail videoId={extractVideoIdFromUrl(videos[1])} />
+                        </mesh>
                         <mesh
                             name="Cube031"
                             geometry={nodes.Cube031.geometry}
@@ -465,7 +477,9 @@ const Hub: FC<HubProps> = ({ model3D }) => {
                             position={[-12.945, 13.285, 31.221 - 13.859]}
                             rotation={[0, Math.PI / 2, 0]}
                             scale={2.193}
-                        />
+                        >
+                            <Thumbnail videoId={extractVideoIdFromUrl(videos[2])} />
+                        </mesh>
                         <mesh
                             name="Cube032"
                             geometry={nodes.Cube032.geometry}
@@ -473,7 +487,9 @@ const Hub: FC<HubProps> = ({ model3D }) => {
                             position={[30.39, 13.285, 31.221 - 13.859]}
                             rotation={[0, Math.PI / 2, 0]}
                             scale={2.193}
-                        />
+                        >
+                            <Thumbnail videoId={extractVideoIdFromUrl(videos[3])} />
+                        </mesh>
                         <mesh
                             name="Cube033"
                             geometry={nodes.Cube033.geometry}
@@ -481,7 +497,9 @@ const Hub: FC<HubProps> = ({ model3D }) => {
                             position={[21.843, 13.285, 31.221 - 13.859]}
                             rotation={[0, Math.PI / 2, 0]}
                             scale={2.193}
-                        />
+                        >
+                            <Thumbnail videoId={extractVideoIdFromUrl(videos[4])} />
+                        </mesh>
                         <mesh
                             name="Cube034"
                             geometry={nodes.Cube034.geometry}
@@ -489,7 +507,9 @@ const Hub: FC<HubProps> = ({ model3D }) => {
                             position={[13.295, 13.285, 31.221 - 13.859]}
                             rotation={[0, Math.PI / 2, 0]}
                             scale={2.193}
-                        />
+                        >
+                            <Thumbnail videoId={extractVideoIdFromUrl(videos[5])} />
+                        </mesh>
                         <mesh
                             name="Cube035"
                             geometry={nodes.Cube035.geometry}
@@ -497,26 +517,6 @@ const Hub: FC<HubProps> = ({ model3D }) => {
                             position={[21.633, 8.97, 35.821 - 13.859]}
                             scale={[1.144, 1, 1]}
                         />
-                        <mesh
-                            ref={buttonRef}
-                            name="Cube036"
-                            geometry={nodes.Cube036.geometry}
-                            material={materials.Marble}
-                            position={[0.002, 1.397, 57.146 - 13.859]}
-                        />
-                        <mesh
-                            name="Cylinder001"
-                            geometry={nodes.Cylinder001.geometry}
-                            position={[-0.383, 2.757, 56.281 - 13.859]}
-                            scale={[0.1, 0.113, 0.1]}
-                        >
-                            <meshStandardMaterial
-                                color="#7e0000"
-                                emissive="#810000"
-                                emissiveIntensity={2}
-                                toneMapped={false}
-                            />
-                        </mesh>
                     </group>
                 </group>
             </GameRigidBody>
