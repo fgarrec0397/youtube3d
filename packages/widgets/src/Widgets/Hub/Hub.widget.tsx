@@ -3,12 +3,26 @@ import {
     GameEditableWidget,
     GameOptionsFieldTypes,
     GameRigidBody,
+    useGame,
     useGameInit,
+    useGameUpdate,
 } from "@granity/engine";
 import { CuboidCollider, MeshCollider, RapierCollider, RigidBodyRefType } from "@granity/physics";
 import { useAnimations, useGLTF, useHelper } from "@granity/three/drei";
+import { useLoader } from "@granity/three/fiber";
+import { RigidBody } from "@react-three/rapier";
 import { FC, MutableRefObject, useCallback, useEffect, useRef, useState } from "react";
-import { Group, LoopOnce, Mesh, Object3D, RectAreaLight } from "three";
+import {
+    AudioListener,
+    AudioLoader,
+    Group,
+    LoopOnce,
+    Mesh,
+    Object3D,
+    PositionalAudio,
+    RectAreaLight,
+    Vector3,
+} from "three";
 import { GLTF, RectAreaLightHelper } from "three-stdlib";
 
 import extractVideoIdFromUrl from "../Cinema/_actions/utilities/extractYoutubeVideoIdFromUrl";
@@ -17,6 +31,7 @@ import useGameManager from "../GameManager/_actions/hooks/useGameManager";
 
 export type HubProps = GameEditableWidget & {
     model3D: string;
+    elevatorSoundEffect: string;
 };
 
 type GLTFResult = GLTF & {
@@ -87,6 +102,7 @@ const Hub: FC<HubProps> = ({ model3D }) => {
     const buttonRef = useRef<Object3D>();
     const spotlightRef = useRef<Object3D>();
     const spotlightRef2 = useRef<Object3D>();
+    const cylinderRBRef = useRef<RigidBodyRefType>(null);
     const rectAreaLightRef = useRef<RectAreaLight>(null);
     const rectAreaLightRef2 = useRef<RectAreaLight>(null);
     const doorColliderRef = useRef<RapierCollider>(null);
@@ -94,13 +110,14 @@ const Hub: FC<HubProps> = ({ model3D }) => {
     const { actions, mixer } = useAnimations(animations, group);
     const [isDoorOpen, setIsDoorOpen] = useState(false);
     const { videosLinks } = useGameManager();
+    const { isGameReady } = useGame();
+
     const videos = videosLinks?.length
         ? videosLinks
         : ["https://www.youtube.com/watch?v=fuhE6PYnRMc&t=8s&ab_channel=MrBeast"];
 
     const doorAnimation = actions.DoorAction;
     const grannyAnimation = actions["Armature|mixamo.com|Layer0"];
-    console.log(model3D, "model3D");
 
     useEffect(() => {
         if (!grannyAnimation) {
@@ -111,6 +128,27 @@ const Hub: FC<HubProps> = ({ model3D }) => {
         grannyAnimation.clampWhenFinished = true;
         grannyAnimation.play();
     }, [grannyAnimation]);
+
+    useGameUpdate(() => {
+        if (!isGameReady) {
+            return;
+        }
+
+        if (cylinderRBRef.current) {
+            if (cylinderRBRef.current.translation().y > 13) {
+                return;
+            }
+
+            cylinderRBRef.current.setTranslation(
+                new Vector3(
+                    cylinderRBRef.current.translation().x,
+                    cylinderRBRef.current.translation().y + 0.02,
+                    cylinderRBRef.current.translation().z
+                ),
+                true
+            );
+        }
+    });
 
     useEffect(() => {
         const finishedCallback = () => {
@@ -295,15 +333,15 @@ const Hub: FC<HubProps> = ({ model3D }) => {
                         position={[-0.199, 3.91, 16.544]}
                         scale={[4.046, 3.957, 1]}
                     /> */}
-                        <MeshCollider type="trimesh">
+                        <RigidBody ref={cylinderRBRef} type="fixed" colliders="trimesh">
                             <mesh
                                 ref={cylinderRef}
                                 name="Cylinder"
                                 geometry={nodes.Cylinder.geometry}
                                 material={materials["Material.002"]}
-                                position={[-0.142, -11.196, 52.246]}
+                                position={[-0.142, -27.4548, 52.246]} // old Y value is -11.196
                             />
-                        </MeshCollider>
+                        </RigidBody>
                         <mesh
                             name="Cube017"
                             geometry={nodes.Cube017.geometry}
@@ -637,6 +675,12 @@ export const widget = createGameWidget({
         {
             name: "model3D",
             displayName: "3D Model",
+            fieldType: GameOptionsFieldTypes.File,
+            defaultValue: "",
+        },
+        {
+            name: "elevatorSoundEffect",
+            displayName: "Elevator sound effect",
             fieldType: GameOptionsFieldTypes.File,
             defaultValue: "",
         },
