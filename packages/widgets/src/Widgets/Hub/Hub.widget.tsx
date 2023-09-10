@@ -3,6 +3,7 @@ import {
     GameEditableWidget,
     GameOptionsFieldTypes,
     GameRigidBody,
+    useGameInit,
 } from "@granity/engine";
 import { CuboidCollider, MeshCollider, RapierCollider, RigidBodyRefType } from "@granity/physics";
 import { useAnimations, useGLTF, useHelper } from "@granity/three/drei";
@@ -98,16 +99,18 @@ const Hub: FC<HubProps> = ({ model3D }) => {
         : ["https://www.youtube.com/watch?v=fuhE6PYnRMc&t=8s&ab_channel=MrBeast"];
 
     const doorAnimation = actions.DoorAction;
+    const grannyAnimation = actions["Armature|mixamo.com|Layer0"];
+    console.log(model3D, "model3D");
 
-    useHelper(
-        rectAreaLightRef as unknown as MutableRefObject<Object3D<Event>>,
-        RectAreaLightHelper
-    );
-
-    useHelper(
-        rectAreaLightRef2 as unknown as MutableRefObject<Object3D<Event>>,
-        RectAreaLightHelper
-    );
+    useEffect(() => {
+        if (!grannyAnimation) {
+            return;
+        }
+        grannyAnimation.setLoop(LoopOnce, 1);
+        grannyAnimation.time = 5;
+        grannyAnimation.clampWhenFinished = true;
+        grannyAnimation.play();
+    }, [grannyAnimation]);
 
     useEffect(() => {
         const finishedCallback = () => {
@@ -340,11 +343,11 @@ const Hub: FC<HubProps> = ({ model3D }) => {
                         />
                         <group
                             name="Cube021"
-                            position={[22.869, 0.439, 26.231]}
+                            position={[22.869, 0.356, 26.231]}
                             rotation={[-Math.PI, 0, 0]}
                             scale={-1}
                         >
-                            <mesh name="Cube007" geometry={nodes.Cube007.geometry}>
+                            <mesh name="Cube007" geometry={nodes.Cube007_1.geometry}>
                                 <meshStandardMaterial
                                     color="#ff0000"
                                     emissive="#F79292"
@@ -353,8 +356,8 @@ const Hub: FC<HubProps> = ({ model3D }) => {
                                 />
                             </mesh>
                             <mesh
-                                name="Cube007_1"
-                                geometry={nodes.Cube007_1.geometry}
+                                name="Cube007_2"
+                                geometry={nodes.Cube007_2.geometry}
                                 material={materials["Marble.014"]}
                             />
                         </group>
@@ -375,14 +378,14 @@ const Hub: FC<HubProps> = ({ model3D }) => {
                             rotation={[-Math.PI / 2, -Math.PI / 2, 0]}
                             scale={[-9.368, -22.057, -0.379]}
                         />
-                        <mesh
+                        {/* <mesh
                             name="Cube024"
                             geometry={nodes.Cube024.geometry}
                             material={materials.Marble}
                             position={[-21.702, 8.97, 35.821 - 13.859]}
                             scale={[1.144, 1, 1]}
-                        />
-                        <mesh
+                        /> */}
+                        {/* <mesh
                             name="Neon002"
                             geometry={nodes.Neon002.geometry}
                             position={[3.346, 7.289, 24.857 - 13.859]}
@@ -409,7 +412,7 @@ const Hub: FC<HubProps> = ({ model3D }) => {
                                 emissiveIntensity={10}
                                 toneMapped={false}
                             />
-                        </mesh>
+                        </mesh> */}
                         <MeshCollider type="cuboid">
                             <mesh
                                 name="Cube025"
@@ -451,72 +454,174 @@ const Hub: FC<HubProps> = ({ model3D }) => {
                             />
                         </MeshCollider>
                         <mesh
-                            name="Cube029"
-                            // geometry={nodes.Cube029.geometry}
-                            // material={materials["black concrete.001"]}
-                            position={[-30.04, 13.285, 31.221 - 13.859]}
+                            name="Cube024"
+                            geometry={nodes.Cube024.geometry}
+                            material={materials["black concrete.003"]}
+                            position={[-13.0478, 9.255, 31.221 - 13.859]}
                             rotation={[0, Math.PI / 2, 0]}
                             scale={2.193}
                         >
                             <Thumbnail videoId={extractVideoIdFromUrl(videos[0])} />
                         </mesh>
                         <mesh
-                            name="Cube030"
-                            geometry={nodes.Cube030.geometry}
-                            material={materials["black concrete.009"]}
-                            position={[-21.492, 13.285, 31.221 - 13.859]}
+                            name="Cube029"
+                            geometry={nodes.Cube029.geometry}
+                            material={materials["black concrete.004"]}
+                            position={[-21.5945, 9.255, 31.221 - 13.859]}
                             rotation={[0, Math.PI / 2, 0]}
                             scale={2.193}
                         >
                             <Thumbnail videoId={extractVideoIdFromUrl(videos[1])} />
                         </mesh>
                         <mesh
-                            name="Cube031"
-                            geometry={nodes.Cube031.geometry}
-                            material={materials["black concrete.010"]}
-                            position={[-12.945, 13.285, 31.221 - 13.859]}
+                            name="Cube030"
+                            geometry={nodes.Cube030.geometry}
+                            material={materials["black concrete.005"]}
+                            position={[-30.1424, 9.255, 31.221 - 13.859]}
                             rotation={[0, Math.PI / 2, 0]}
                             scale={2.193}
                         >
                             <Thumbnail videoId={extractVideoIdFromUrl(videos[2])} />
                         </mesh>
                         <mesh
-                            name="Cube032"
-                            geometry={nodes.Cube032.geometry}
-                            material={materials["black concrete.011"]}
-                            position={[30.39, 13.285, 31.221 - 13.859]}
+                            name="Cube031"
+                            geometry={nodes.Cube031.geometry}
+                            material={materials["black concrete.006"]}
+                            position={[-30.1424, 14.572, 31.221 - 13.859]}
                             rotation={[0, Math.PI / 2, 0]}
                             scale={2.193}
                         >
                             <Thumbnail videoId={extractVideoIdFromUrl(videos[3])} />
                         </mesh>
                         <mesh
-                            name="Cube033"
-                            geometry={nodes.Cube033.geometry}
-                            material={materials["black concrete.012"]}
-                            position={[21.843, 13.285, 31.221 - 13.859]}
+                            name="Cube032"
+                            geometry={nodes.Cube032.geometry}
+                            material={materials["black concrete.011"]}
+                            position={[30.39, 14.572, 31.221 - 13.859]}
                             rotation={[0, Math.PI / 2, 0]}
                             scale={2.193}
                         >
                             <Thumbnail videoId={extractVideoIdFromUrl(videos[4])} />
                         </mesh>
                         <mesh
-                            name="Cube034"
-                            geometry={nodes.Cube034.geometry}
-                            material={materials["black concrete.013"]}
-                            position={[13.295, 13.285, 31.221 - 13.859]}
+                            name="Cube033"
+                            geometry={nodes.Cube033.geometry}
+                            material={materials["black concrete.012"]}
+                            position={[21.843, 14.572, 31.221 - 13.859]}
                             rotation={[0, Math.PI / 2, 0]}
                             scale={2.193}
                         >
                             <Thumbnail videoId={extractVideoIdFromUrl(videos[5])} />
                         </mesh>
                         <mesh
+                            name="Cube034"
+                            geometry={nodes.Cube034.geometry}
+                            material={materials["black concrete.013"]}
+                            position={[13.295, 14.572, 31.221 - 13.859]}
+                            rotation={[0, Math.PI / 2, 0]}
+                            scale={2.193}
+                        >
+                            <Thumbnail videoId={extractVideoIdFromUrl(videos[6])} />
+                        </mesh>
+                        <mesh
+                            name="Cube035"
+                            geometry={nodes.Cube035.geometry}
+                            material={materials["black concrete.007"]}
+                            position={[-21.5945, 14.572, 31.221 - 13.859]}
+                            rotation={[0, Math.PI / 2, 0]}
+                            scale={2.193}
+                        >
+                            <Thumbnail videoId={extractVideoIdFromUrl(videos[7])} />
+                        </mesh>
+                        <mesh
+                            name="Cube036"
+                            geometry={nodes.Cube036.geometry}
+                            material={materials["black concrete.008"]}
+                            position={[-13.0478, 14.572, 31.221 - 13.859]}
+                            rotation={[0, Math.PI / 2, 0]}
+                            scale={2.193}
+                        >
+                            <Thumbnail videoId={extractVideoIdFromUrl(videos[8])} />
+                        </mesh>
+                        <mesh
+                            name="Cube037"
+                            geometry={nodes.Cube037.geometry}
+                            material={materials["black concrete.014"]}
+                            position={[13.295, 9.255, 31.221 - 13.859]}
+                            rotation={[0, Math.PI / 2, 0]}
+                            scale={2.193}
+                        >
+                            <Thumbnail videoId={extractVideoIdFromUrl(videos[9])} />
+                        </mesh>
+                        <mesh
+                            name="Cube038"
+                            geometry={nodes.Cube038.geometry}
+                            material={materials["black concrete.015"]}
+                            position={[21.843, 9.255, 31.221 - 13.859]}
+                            rotation={[0, Math.PI / 2, 0]}
+                            scale={2.193}
+                        >
+                            <Thumbnail videoId={extractVideoIdFromUrl(videos[10])} />
+                        </mesh>
+                        <mesh
+                            name="Cube039"
+                            geometry={nodes.Cube039.geometry}
+                            material={materials["black concrete.016"]}
+                            position={[30.39, 9.255, 31.221 - 13.859]}
+                            rotation={[0, Math.PI / 2, 0]}
+                            scale={2.193}
+                        >
+                            <Thumbnail videoId={extractVideoIdFromUrl(videos[11])} />
+                        </mesh>
+
+                        <group
+                            name="Armature"
+                            position={[17.587, 0, 22.667]}
+                            rotation={[Math.PI / 2, 0, 0]}
+                            scale={0.019}
+                        >
+                            <primitive object={nodes.mixamorigHips} />
+                            <group name="Fitness_Grandma_BodyGeo">
+                                <skinnedMesh
+                                    name="Fitness_Grandma_BodyGeo_1"
+                                    geometry={nodes.Fitness_Grandma_BodyGeo_1.geometry}
+                                    material={materials.Grandma_MAT}
+                                    skeleton={nodes.Fitness_Grandma_BodyGeo_1.skeleton}
+                                />
+                                <skinnedMesh
+                                    name="Fitness_Grandma_BodyGeo_2"
+                                    geometry={nodes.Fitness_Grandma_BodyGeo_2.geometry}
+                                    material={materials.Lens_MAT}
+                                    skeleton={nodes.Fitness_Grandma_BodyGeo_2.skeleton}
+                                />
+                            </group>
+                            <skinnedMesh
+                                name="Fitness_Grandma_BrowsAnimGeo"
+                                geometry={nodes.Fitness_Grandma_BrowsAnimGeo.geometry}
+                                material={materials.FitGrandma_Brows_MAT1}
+                                skeleton={nodes.Fitness_Grandma_BrowsAnimGeo.skeleton}
+                            />
+                            <skinnedMesh
+                                name="Fitness_Grandma_EyesAnimGeo"
+                                geometry={nodes.Fitness_Grandma_EyesAnimGeo.geometry}
+                                material={materials.FitGrandma_Eyes_MAT1}
+                                skeleton={nodes.Fitness_Grandma_EyesAnimGeo.skeleton}
+                            />
+                            <skinnedMesh
+                                name="Fitness_Grandma_MouthAnimGeo"
+                                geometry={nodes.Fitness_Grandma_MouthAnimGeo.geometry}
+                                material={materials.FitGrandma_Mouth_MAT1}
+                                skeleton={nodes.Fitness_Grandma_MouthAnimGeo.skeleton}
+                            />
+                        </group>
+
+                        {/* <mesh
                             name="Cube035"
                             geometry={nodes.Cube035.geometry}
                             material={materials["Marble.019"]}
                             position={[21.633, 8.97, 35.821 - 13.859]}
                             scale={[1.144, 1, 1]}
-                        />
+                        /> */}
                     </group>
                 </group>
             </GameRigidBody>
