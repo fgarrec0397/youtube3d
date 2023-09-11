@@ -91,7 +91,8 @@ const Player: FC<PlayerProps> = ({ position, rotation, walkSoundEffect }, ref) =
         }
 
         if (!isEqual(previousVideosLinks, videosLinks)) {
-            rigidbodyRef.current?.setTranslation(unSerializeVector3(position), true);
+            // rigidbodyRef.current?.setTranslation(unSerializeVector3(position), true);
+            rigidbodyRef.current?.setTranslation(new Vector3(position[0], 1.36, position[2]), true);
         }
     }, [position, previousVideosLinks, rotation, videosLinks]);
 

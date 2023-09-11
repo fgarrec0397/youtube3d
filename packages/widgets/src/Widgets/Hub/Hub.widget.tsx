@@ -108,14 +108,13 @@ const Hub: FC<HubProps> = ({ model3D }) => {
     const doorColliderRef = useRef<RapierCollider>(null);
     const { nodes, materials, animations } = useGLTF(model3D) as GLTFResult;
     const { actions, mixer } = useAnimations(animations, group);
+    const [isElevatorUp, setIsElevatorUp] = useState(false);
     const [isDoorOpen, setIsDoorOpen] = useState(false);
-    const { videosLinks } = useGameManager();
+    const [doorAnimationAlreadyPlayed, setDoorAnimationAlreadyPlayed] = useState(false);
+    const { videosLinks, canOpenDoor } = useGameManager();
     const { isGameReady } = useGame();
 
-    const videos = videosLinks?.length
-        ? videosLinks
-        : ["https://www.youtube.com/watch?v=fuhE6PYnRMc&t=8s&ab_channel=MrBeast"];
-
+    const videos = videosLinks;
     const doorAnimation = actions.DoorAction;
     const grannyAnimation = actions["Armature|mixamo.com|Layer0"];
 
@@ -136,7 +135,7 @@ const Hub: FC<HubProps> = ({ model3D }) => {
 
         if (cylinderRBRef.current) {
             if (cylinderRBRef.current.translation().y > 13) {
-                return;
+                return setIsElevatorUp(true);
             }
 
             cylinderRBRef.current.setTranslation(
@@ -164,21 +163,43 @@ const Hub: FC<HubProps> = ({ model3D }) => {
         };
     }, [mixer]);
 
-    const openDoor = useCallback(() => {
+    const openDoor = useCallback(
+        (resetAnimation?: boolean) => {
+            if (!doorAnimation) {
+                return;
+            }
+
+            doorAnimation.setLoop(LoopOnce, 1);
+            doorAnimation.clampWhenFinished = true;
+
+            if (resetAnimation) {
+                doorAnimation.reset();
+            } else {
+                doorAnimation.play();
+            }
+
+            setDoorAnimationAlreadyPlayed(true);
+        },
+        [doorAnimation]
+    );
+
+    const closeDoor = useCallback(() => {
         if (!doorAnimation) {
             return;
         }
 
-        doorAnimation.setLoop(LoopOnce, 1);
-        doorAnimation.clampWhenFinished = true;
-        doorAnimation.play();
+        doorAnimation.time = 0;
+        setIsDoorOpen(false);
+        doorColliderRef.current?.setSensor(false);
     }, [doorAnimation]);
 
     useEffect(() => {
-        setTimeout(() => {
-            openDoor();
-        }, 10000);
-    }, [doorAnimation, openDoor]);
+        if (canOpenDoor && isElevatorUp) {
+            openDoor(doorAnimationAlreadyPlayed);
+        } else {
+            closeDoor();
+        }
+    }, [canOpenDoor, closeDoor, doorAnimation, doorAnimationAlreadyPlayed, isElevatorUp, openDoor]);
 
     return (
         <>
@@ -282,7 +303,7 @@ const Hub: FC<HubProps> = ({ model3D }) => {
                                 scale={[1.562, 1.289, 349.822]}
                             />
                         </MeshCollider>
-                        {/* <MeshCollider type="cuboid">
+                        <MeshCollider type="cuboid">
                             <mesh
                                 name="Cube015"
                                 geometry={nodes.Cube015.geometry}
@@ -291,7 +312,7 @@ const Hub: FC<HubProps> = ({ model3D }) => {
                                 rotation={[Math.PI, 0, Math.PI / 2]}
                                 scale={[9.368, 37.699, 0.03]}
                             />
-                        </MeshCollider> */}
+                        </MeshCollider>
                         <MeshCollider type="trimesh">
                             <mesh
                                 name="Cube016"
@@ -326,13 +347,6 @@ const Hub: FC<HubProps> = ({ model3D }) => {
                                 material={materials.Marble}
                             />
                         </group>
-                        {/* <mesh
-                        name="Cube017"
-                        geometry={nodes.Cube017.geometry}
-                        material={nodes.Cube017.material}
-                        position={[-0.199, 3.91, 16.544]}
-                        scale={[4.046, 3.957, 1]}
-                    /> */}
                         <RigidBody ref={cylinderRBRef} type="fixed" colliders="trimesh">
                             <mesh
                                 ref={cylinderRef}
@@ -416,41 +430,7 @@ const Hub: FC<HubProps> = ({ model3D }) => {
                             rotation={[-Math.PI / 2, -Math.PI / 2, 0]}
                             scale={[-9.368, -22.057, -0.379]}
                         />
-                        {/* <mesh
-                            name="Cube024"
-                            geometry={nodes.Cube024.geometry}
-                            material={materials.Marble}
-                            position={[-21.702, 8.97, 35.821 - 13.859]}
-                            scale={[1.144, 1, 1]}
-                        /> */}
-                        {/* <mesh
-                            name="Neon002"
-                            geometry={nodes.Neon002.geometry}
-                            position={[3.346, 7.289, 24.857 - 13.859]}
-                            rotation={[-Math.PI / 2, 0, -Math.PI]}
-                            scale={[-0.066, -5.961, -0.065]}
-                        >
-                            <meshStandardMaterial
-                                color="#F79292"
-                                emissive="#F79292"
-                                emissiveIntensity={10}
-                                toneMapped={false}
-                            />
-                        </mesh>
-                        <mesh
-                            name="Neon003"
-                            geometry={nodes.Neon003.geometry}
-                            position={[-3.619, 7.289, 24.857 - 13.859]}
-                            rotation={[-Math.PI / 2, 0, -Math.PI]}
-                            scale={[-0.066, -5.961, -0.065]}
-                        >
-                            <meshStandardMaterial
-                                color="#F79292"
-                                emissive="#F79292"
-                                emissiveIntensity={10}
-                                toneMapped={false}
-                            />
-                        </mesh> */}
+
                         <MeshCollider type="cuboid">
                             <mesh
                                 name="Cube025"

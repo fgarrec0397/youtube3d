@@ -3,11 +3,13 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 export interface GameManagerState {
     pointerLockEnable: boolean;
     videosLinks: string[];
+    canOpenDoor: boolean;
 }
 
 const initialState: GameManagerState = {
     pointerLockEnable: true,
-    videosLinks: ["https://www.youtube.com/watch?v=fuhE6PYnRMc&t=8s&ab_channel=MrBeast"],
+    videosLinks: [],
+    canOpenDoor: false,
 };
 
 export const gameManagerSlice = createSlice({
@@ -23,9 +25,12 @@ export const gameManagerSlice = createSlice({
         setVideosLinks: (state, action: PayloadAction<GameManagerState["videosLinks"]>) => {
             state.videosLinks = action.payload;
         },
+        setCanOpenDoor: (state, action: PayloadAction<GameManagerState["canOpenDoor"]>) => {
+            state.canOpenDoor = action.payload;
+        },
     },
 });
 
-export const { setPointerLockEnable, setVideosLinks } = gameManagerSlice.actions;
+export const { setPointerLockEnable, setVideosLinks, setCanOpenDoor } = gameManagerSlice.actions;
 
 export default gameManagerSlice;

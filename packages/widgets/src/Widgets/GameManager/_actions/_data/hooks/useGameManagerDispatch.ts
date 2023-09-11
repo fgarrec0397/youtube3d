@@ -1,6 +1,6 @@
 import { useAppDispatch } from "@granity/engine";
 
-import { setPointerLockEnable, setVideosLinks } from "../state/gameManagerReducer";
+import { setCanOpenDoor, setPointerLockEnable, setVideosLinks } from "../state/gameManagerReducer";
 
 export default () => {
     const dispatch = useAppDispatch();
@@ -13,8 +13,13 @@ export default () => {
         dispatch(setVideosLinks(value));
     };
 
+    const dispatchSetCanOpenDoor = (value: boolean) => {
+        dispatch(setCanOpenDoor(value));
+    };
+
     return {
         dispatchSetPointerLockEnable,
         dispatchSetVideosLinks,
+        dispatchSetCanOpenDoor,
     };
 };

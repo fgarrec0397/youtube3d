@@ -21,9 +21,7 @@ const Cinema: FC<CinemaProps> = ({ model3D, ambiantSoundEffect }) => {
     const ambiantSoundEffectRef = useRef<PositionalAudio>(null);
     const [listener] = useState(() => new AudioListener());
     const buffer = useLoader(AudioLoader, ambiantSoundEffect || "");
-    const videos = videosLinks?.length
-        ? videosLinks
-        : ["https://www.youtube.com/watch?v=fuhE6PYnRMc&t=8s&ab_channel=MrBeast"];
+    const videos = videosLinks;
 
     useGameInit(() => {
         if (!ambiantSoundEffectRef.current) {

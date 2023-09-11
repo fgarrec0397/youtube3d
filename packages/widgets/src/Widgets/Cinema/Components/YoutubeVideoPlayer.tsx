@@ -62,8 +62,6 @@ const YoutubeVideoPlayer: FC<Props> = ({ videoId, position, canVideoPlay }) => {
         return null;
     }
 
-    console.log(canVideoPlay, "canVideoPlay");
-
     return (
         <Html distanceFactor={1} transform position={position} scale={[0.6, 0.6, 0.6]}>
             <div

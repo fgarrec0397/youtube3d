@@ -132,25 +132,24 @@ const styles: VideosLinksUIStyles = {
 };
 
 const VideosLinksUI: FC = () => {
-    const { updatePointerLockEnable, updateVideosLinks, videosLinks } = useGameManager();
+    const { updatePointerLockEnable, updateVideosLinks, videosLinks, updateCanOpenDoor } =
+        useGameManager();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [fields, setFields] = useState<Inputs[]>(
-        videosLinks?.map((x, index) => ({
-            id: index,
-            value: x,
-        })) || [
-            {
-                id: 0,
-                value: "",
-            },
-        ]
-    );
+    const [fields, setFields] = useState<Inputs[]>([]);
 
     useInputs((inputs) => {
         if (inputs.openVideoLinksDialog) {
             setIsDialogOpen(true);
         }
     }, []);
+
+    useEffect(() => {
+        if (videosLinks.length > 0) {
+            updateCanOpenDoor(true);
+        } else {
+            updateCanOpenDoor(false);
+        }
+    }, [updateCanOpenDoor, videosLinks.length]);
 
     useEffect(() => {
         updatePointerLockEnable(!isDialogOpen);
@@ -177,6 +176,10 @@ const VideosLinksUI: FC = () => {
         const value = event.target.value;
 
         setFields((prev) => {
+            if (!prev) {
+                return [];
+            }
+
             prev[index] = {
                 ...prev[index],
                 value,
@@ -188,6 +191,10 @@ const VideosLinksUI: FC = () => {
 
     const addRow = () => {
         setFields((prev) => {
+            if (!prev) {
+                return [];
+            }
+
             return [
                 ...prev,
                 {
@@ -202,13 +209,13 @@ const VideosLinksUI: FC = () => {
 
     const deleteRow = (id: number) => {
         setFields((prev) => {
-            const newFields = prev.filter((x) => x.id !== id);
+            const newFields = prev?.filter((x) => x.id !== id);
             return newFields;
         });
     };
 
     const confirm = () => {
-        updateVideosLinks(fields.map((x) => x.value));
+        updateVideosLinks(fields?.map((x) => x.value) || []);
         setIsDialogOpen(false);
     };
 

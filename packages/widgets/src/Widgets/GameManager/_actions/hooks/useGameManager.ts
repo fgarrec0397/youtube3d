@@ -1,8 +1,14 @@
 import useGameManagerService from "../_data/hooks/useGameManagerService";
 
 export default () => {
-    const { setPointerLockEnable, pointerLockEnable, videosLinks, setVideosLinks } =
-        useGameManagerService();
+    const {
+        setPointerLockEnable,
+        canOpenDoor,
+        setCanOpenDoor,
+        pointerLockEnable,
+        videosLinks,
+        setVideosLinks,
+    } = useGameManagerService();
 
     const updatePointerLockEnable = (value: boolean) => {
         setPointerLockEnable(value);
@@ -10,6 +16,10 @@ export default () => {
 
     const updateVideosLinks = (links: string[]) => {
         setVideosLinks(links);
+    };
+
+    const updateCanOpenDoor = (value: boolean) => {
+        setCanOpenDoor(value);
     };
 
     const addVideoLink = (link: string) => {
@@ -32,5 +42,7 @@ export default () => {
         removeVideoLink,
         updateVideosLinks,
         videosLinks,
+        updateCanOpenDoor,
+        canOpenDoor,
     };
 };
